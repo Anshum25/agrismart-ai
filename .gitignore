@@ -1,0 +1,13 @@
+venv/
+env/
+.env
+__pycache__/
+*.pyc
+data/*
+!data/.gitkeep
+!data/README.md
+model_weights/
+*.pth
+*.pt
+*.h5
+.ipynb_checkpoints/
