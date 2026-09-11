@@ -11,8 +11,13 @@ Also supports in-memory frames for live webcam inference:
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 from typing import Union
+
+_ROOT = str(Path(__file__).resolve().parent.parent)
+if _ROOT not in sys.path:
+    sys.path.insert(0, _ROOT)
 
 import numpy as np
 import tensorflow as tf

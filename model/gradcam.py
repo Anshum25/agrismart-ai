@@ -6,8 +6,13 @@ Visualizes which image regions most influenced the model's prediction.
 
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 from typing import Union
+
+_ROOT = str(Path(__file__).resolve().parent.parent)
+if _ROOT not in sys.path:
+    sys.path.insert(0, _ROOT)
 
 import cv2
 import numpy as np
@@ -31,19 +36,27 @@ def _find_last_conv_layer(model: tf.keras.Model) -> str:
 
 
 def make_gradcam_model(model: tf.keras.Model, last_conv_layer_name: str | None = None):
-    """Build a sub-model that outputs conv feature maps + predictions."""
-    last_conv = last_conv_layer_name or _find_last_conv_layer(model)
-    base = model.layers[1]
-    try:
-        last_conv_layer = base.get_layer(last_conv)
-    except ValueError:
-        last_conv_layer = base.layers[-30]
+    """Build sub-models that output conv feature maps and classification predictions."""
+    base = model.layers[1] if len(model.layers) > 1 and isinstance(model.layers[1], tf.keras.Model) else None
 
-    grad_model = tf.keras.models.Model(
-        inputs=model.inputs,
-        outputs=[last_conv_layer.output, model.output],
-    )
-    return grad_model, last_conv_layer.name
+    if base is not None:
+        last_conv = last_conv_layer_name or "conv5_block3_out"
+        try:
+            last_conv_layer = base.get_layer(last_conv)
+        except ValueError:
+            last_conv_layer = base.layers[-1]
+        conv_model = tf.keras.Model(base.inputs, last_conv_layer.output)
+        head_input = tf.keras.Input(shape=conv_model.output.shape[1:])
+        x = head_input
+        for layer in model.layers[2:]:
+            x = layer(x)
+        head_model = tf.keras.Model(head_input, x)
+        return conv_model, head_model
+    else:
+        last_conv = last_conv_layer_name or _find_last_conv_layer(model)
+        last_conv_layer = model.get_layer(last_conv)
+        grad_model = tf.keras.Model(inputs=model.inputs, outputs=[last_conv_layer.output, model.output])
+        return grad_model, None
 
 
 def compute_heatmap(
@@ -53,7 +66,7 @@ def compute_heatmap(
 ) -> np.ndarray:
     """Compute a Grad-CAM heatmap (float32, HxW, values 0-1)."""
     model = model or load_model()
-    grad_model, _ = make_gradcam_model(model)
+    conv_model, head_model = make_gradcam_model(model)
 
     if image_array.ndim == 2:
         image_array = np.stack([image_array] * 3, axis=-1)
@@ -69,16 +82,32 @@ def compute_heatmap(
     batch = np.expand_dims(arr, axis=0)
     batch = preprocess_input(batch)
 
-    with tf.GradientTape() as tape:
-        conv_outputs, predictions = grad_model(batch, training=False)
-        if class_index is None:
-            class_index = int(tf.argmax(predictions[0]))
-        loss = predictions[:, class_index]
+    if head_model is not None:
+        with tf.GradientTape() as tape:
+            conv_outputs = conv_model(batch, training=False)
+            tape.watch(conv_outputs)
+            predictions = head_model(conv_outputs, training=False)
+            if class_index is None:
+                class_index = int(tf.argmax(predictions[0]))
+            loss = predictions[:, class_index]
 
-    grads = tape.gradient(loss, conv_outputs)
-    pooled_grads = tf.reduce_mean(grads, axis=(0, 1, 2))
-    conv_outputs = conv_outputs[0]
-    heatmap = tf.reduce_sum(tf.multiply(pooled_grads, conv_outputs), axis=-1)
+        grads = tape.gradient(loss, conv_outputs)
+        pooled_grads = tf.reduce_mean(grads, axis=(0, 1, 2))
+        conv_outputs = conv_outputs[0]
+        heatmap = conv_outputs @ pooled_grads[..., tf.newaxis]
+        heatmap = tf.squeeze(heatmap)
+    else:
+        with tf.GradientTape() as tape:
+            conv_outputs, predictions = conv_model(batch, training=False)
+            if class_index is None:
+                class_index = int(tf.argmax(predictions[0]))
+            loss = predictions[:, class_index]
+
+        grads = tape.gradient(loss, conv_outputs)
+        pooled_grads = tf.reduce_mean(grads, axis=(0, 1, 2))
+        conv_outputs = conv_outputs[0]
+        heatmap = tf.reduce_sum(tf.multiply(pooled_grads, conv_outputs), axis=-1)
+
     heatmap = tf.maximum(heatmap, 0) / (tf.reduce_max(heatmap) + 1e-8)
     heatmap = heatmap.numpy()
 
