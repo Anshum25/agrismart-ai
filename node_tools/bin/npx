@@ -1,0 +1,2 @@
+#!/bin/sh
+exec /Users/apple/Library/Caches/ms-playwright-go/1.50.1/node /Users/apple/Desktop/SIH2026/agrismart-ai/node_tools/package/bin/npx-cli.js "$@"
