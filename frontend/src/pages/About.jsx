@@ -38,7 +38,8 @@ export default function About() {
   const [health, setHealth] = useState(null)
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL : '/api'}/health`)
+    const baseUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace(/\/+$/, '') : '/api'
+    fetch(`${baseUrl}/health`)
       .then(r => r.json())
       .then(setHealth)
       .catch(() => {})

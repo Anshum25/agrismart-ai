@@ -128,7 +128,8 @@ export default function Diagnose() {
       if (file) {
         const formData = new FormData()
         formData.append('file', file)
-        res = await fetch(`${import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL : '/api'}/predict/gradcam`, { method: 'POST', body: formData })
+        const baseUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace(/\/+$/, '') : '/api'
+        res = await fetch(`${baseUrl}/predict/gradcam`, { method: 'POST', body: formData })
       } else {
         // Sample: use placeholder endpoint or simulate with label hint
         // We create a minimal placeholder image and send it
@@ -143,7 +144,8 @@ export default function Diagnose() {
         const sampleFile = new File([blob], 'sample.jpg', { type: 'image/jpeg' })
         const formData = new FormData()
         formData.append('file', sampleFile)
-        res = await fetch(`${import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL : '/api'}/predict/gradcam`, { method: 'POST', body: formData })
+        const baseUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace(/\/+$/, '') : '/api'
+        res = await fetch(`${baseUrl}/predict/gradcam`, { method: 'POST', body: formData })
       }
 
       if (!res.ok) {
