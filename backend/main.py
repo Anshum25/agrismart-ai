@@ -134,6 +134,23 @@ def _mock_predict(label: str = "Tomato___Early_blight", confidence: float = 0.91
     """Fallback when model weights aren't present (demo/cloud mode)."""
     return label, confidence
 
+def _generate_mock_gradcam(img_arr: np.ndarray) -> Image.Image:
+    """Generates a highly realistic mock Grad-CAM heatmap for demo mode."""
+    import cv2
+    h, w = img_arr.shape[:2]
+    heatmap = np.zeros((h, w), dtype=np.float32)
+    center_x, center_y = w // 2, h // 2
+    cv2.circle(heatmap, (center_x, center_y), min(w, h) // 3, 1.0, -1)
+    heatmap = cv2.GaussianBlur(heatmap, (99, 99), 0)
+    
+    heatmap_uint8 = np.uint8(255 * heatmap)
+    jet = cv2.applyColorMap(heatmap_uint8, cv2.COLORMAP_JET)
+    
+    img_bgr = cv2.cvtColor(img_arr, cv2.COLORMAP_RGB2BGR) if img_arr.shape[2] == 3 else img_arr
+    overlay = cv2.addWeighted(img_bgr, 0.5, jet, 0.5, 0)
+    overlay_rgb = cv2.cvtColor(overlay, cv2.COLORMAP_BGR2RGB)
+    return Image.fromarray(overlay_rgb)
+
 
 def _severity(label: str, confidence: float) -> str:
     if "healthy" in label.lower():
@@ -249,9 +266,12 @@ async def predict_gradcam_endpoint(file: UploadFile = File(...)):
     else:
         # Demo mode mock
         label, confidence = _mock_predict()
-        # Return original image as both original and overlay placeholder
+        # Return original image as both original and mock overlay
         original_b64 = _image_to_b64(pil_img)
-        overlay_b64 = original_b64  # same image as placeholder in demo
+        try:
+            overlay_b64 = _image_to_b64(_generate_mock_gradcam(img_arr))
+        except Exception:
+            overlay_b64 = original_b64
 
     try:
         from bonus.assistant import get_care_advice
