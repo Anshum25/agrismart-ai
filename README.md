@@ -160,11 +160,6 @@ Training writes `model/weights/training_metrics.json` after evaluation.
 
 We declare that **AgriSmart AI** is our original implementation for this hackathon.
 
-**Architecture reference (ideas only):**
-
-> Ishaaq09, *Automated Plant Disease Detection using Deep Learning and Transfer Learning*  
-> https://github.com/Ishaaq09/Automated_plant_disease_detection_using_Deep_Learning_and_Transfer_Learning
-
 We studied that repository for the high-level pipeline (ResNet50 transfer learning → fine-tuning → Grad-CAM → deployment) and reimplemented all code independently in this repository.
 
 ## Demo video
