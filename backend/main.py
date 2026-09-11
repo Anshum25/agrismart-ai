@@ -146,9 +146,9 @@ def _generate_mock_gradcam(img_arr: np.ndarray) -> Image.Image:
     heatmap_uint8 = np.uint8(255 * heatmap)
     jet = cv2.applyColorMap(heatmap_uint8, cv2.COLORMAP_JET)
     
-    img_bgr = cv2.cvtColor(img_arr, cv2.COLORMAP_RGB2BGR) if img_arr.shape[2] == 3 else img_arr
+    img_bgr = cv2.cvtColor(img_arr, cv2.COLOR_RGB2BGR) if img_arr.shape[2] == 3 else img_arr
     overlay = cv2.addWeighted(img_bgr, 0.5, jet, 0.5, 0)
-    overlay_rgb = cv2.cvtColor(overlay, cv2.COLORMAP_BGR2RGB)
+    overlay_rgb = cv2.cvtColor(overlay, cv2.COLOR_BGR2RGB)
     return Image.fromarray(overlay_rgb)
 
 
