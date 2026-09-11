@@ -9,7 +9,7 @@ streamlit>=1.28
 opencv-python>=4.8
 
 # LLM advice layer
-huggingface_hub>=0.20
+google-generativeai>=0.8.0
 python-dotenv>=1.0
 
 # Colab / training (optional locally)

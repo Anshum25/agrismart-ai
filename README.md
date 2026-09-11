@@ -10,7 +10,7 @@ This project follows the **transfer-learning + deployment** pattern popularized 
 
 **What we adopted (ideas, not code):** ResNet50 backbone, two-phase fine-tuning, Grad-CAM visualization, and a separate inference/demo layer.
 
-**What is original here:** project structure, training pipeline (`model/train.py`), inference API (`model/predict.py`), Hugging Face Mistral advice module, Streamlit app, OpenCV live demo, Colab notebook, and all implementation code in this repository.
+**What is original here:** project structure, training pipeline (`model/train.py`), inference API (`model/predict.py`), Google Gemini advice module, Streamlit app, OpenCV live demo, Colab notebook, and all implementation code in this repository.
 
 ## Project structure
 
@@ -26,7 +26,7 @@ agrismart-ai/
 │   ├── app.py            # Streamlit main app
 │   └── live_demo.py      # OpenCV webcam demo (separate from Streamlit)
 ├── bonus/
-│   └── assistant.py      # Hugging Face LLM care advice
+│   └── assistant.py      # Google Gemini LLM care advice
 ├── data/                 # Local dataset cache (gitignored)
 ├── notebooks/
 │   └── colab_train.ipynb # Colab training walkthrough
@@ -65,17 +65,16 @@ model/weights/agrismart_resnet50.keras
 model/weights/class_labels.json
 ```
 
-### 3. Hugging Face token (LLM advice)
+### 3. Google Gemini API key (LLM advice)
 
-1. Create a free account at [huggingface.co](https://huggingface.co)
-2. Generate a token: [Settings → Access Tokens](https://huggingface.co/settings/tokens)
-3. Copy `.env.example` → `.env` and set:
+1. Get a free API key at [aistudio.google.com/apikey](https://aistudio.google.com/apikey)
+2. Copy `.env.example` → `.env` and set:
 
 ```env
-HUGGINGFACE_TOKEN=hf_your_token_here
+GEMINI_API_KEY=your_key_here
 ```
 
-If the token is missing or the API is unavailable, the app falls back to canned advice (no crash).
+If the key is missing or the API is unavailable, the app falls back to canned advice (no crash).
 
 ### 4. Run Streamlit app
 
