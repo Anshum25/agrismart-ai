@@ -2,11 +2,6 @@
 
 AI-powered plant disease detection for hackathons and Smart India Hackathon (SIH) demos. Upload a leaf photo or use your webcam to get a disease classification, Grad-CAM explanation, and plain-language care advice from an LLM.
 
-## Architecture (design inspiration)
-
-This project follows the **transfer-learning + deployment** pattern popularized by community PlantVillage classifiers, including:
-
-- [Ishaaq09/Automated_plant_disease_detection_using_Deep_Learning_and_Transfer_Learning](https://github.com/Ishaaq09/Automated_plant_disease_detection_using_Deep_Learning_and_Transfer_Learning)
 
 **What we adopted (ideas, not code):** ResNet50 backbone, two-phase fine-tuning, Grad-CAM visualization, and a separate inference/demo layer.
 
