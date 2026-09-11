@@ -57,15 +57,16 @@ function Accordion({ title, icon, children, defaultOpen = false }) {
 export default function ResultCard({ result, originalPreview }) {
   const {
     pretty_label, crop, label, confidence, confidence_pct,
-    gradcam_overlay, care_advice, model_loaded
+    gradcam_image_b64, advice, original_image_b64, model_loaded
   } = result
 
   const sev = getSeverity(label, confidence)
-  const advSections = parseAdvice(care_advice)
+  const advSections = parseAdvice(advice)
   const isHealthy = sev.level === 'healthy'
 
-  const originalSrc = originalPreview || null
-  const heatmapSrc = gradcam_overlay ? `data:image/png;base64,${gradcam_overlay}` : null
+  // Use the local file preview first (higher resolution), fall back to backend-encoded image
+  const originalSrc = originalPreview || (original_image_b64 ? `data:image/jpeg;base64,${original_image_b64}` : null)
+  const heatmapSrc = gradcam_image_b64 ? `data:image/png;base64,${gradcam_image_b64}` : null
 
   return (
     <div className="result-wrapper">
@@ -129,7 +130,7 @@ export default function ResultCard({ result, originalPreview }) {
         )}
 
         {/* Advice */}
-        {care_advice && (
+        {advice && (
           <div className="advice-card" style={{ marginBottom: 20 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
               <Leaf size={16} color="var(--forest-light)" />
@@ -160,7 +161,7 @@ export default function ResultCard({ result, originalPreview }) {
                 )}
               </>
             ) : (
-              <p style={{ fontSize: '.9rem', color: 'var(--ink-700)', lineHeight: 1.75 }}>{care_advice}</p>
+              <p style={{ fontSize: '.9rem', color: 'var(--ink-700)', lineHeight: 1.75 }}>{advice}</p>
             )}
           </div>
         )}
