@@ -1,0 +1,12 @@
+# Railway Nixpacks configuration
+[phases.setup]
+nixPkgs = ["python310", "libGL", "glib"]
+
+[phases.install]
+cmds = [
+    "python -m pip install --upgrade pip",
+    "pip install -r requirements.txt"
+]
+
+[start]
+cmd = "streamlit run app/app.py --server.port ${PORT:-8501} --server.address 0.0.0.0 --server.headless true --browser.gatherUsageStats false"
