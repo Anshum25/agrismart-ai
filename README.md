@@ -2,11 +2,6 @@
 
 AI-powered plant disease detection for hackathons and Smart India Hackathon (SIH) demos. Upload a leaf photo or use your webcam to get a disease classification, Grad-CAM explanation, and plain-language care advice from an LLM.
 
-## Architecture (design inspiration)
-
-This project follows the **transfer-learning + deployment** pattern popularized by community PlantVillage classifiers, including:
-
-- [Ishaaq09/Automated_plant_disease_detection_using_Deep_Learning_and_Transfer_Learning](https://github.com/Ishaaq09/Automated_plant_disease_detection_using_Deep_Learning_and_Transfer_Learning)
 
 **What we adopted (ideas, not code):** ResNet50 backbone, two-phase fine-tuning, Grad-CAM visualization, and a separate inference/demo layer.
 
@@ -163,11 +158,6 @@ Training writes `model/weights/training_metrics.json` after evaluation.
 ## Originality declaration
 
 We declare that **AgriSmart AI** is our original implementation for this hackathon.
-
-**Architecture reference (ideas only):**
-
-> Ishaaq09, *Automated Plant Disease Detection using Deep Learning and Transfer Learning*  
-> https://github.com/Ishaaq09/Automated_plant_disease_detection_using_Deep_Learning_and_Transfer_Learning
 
 We studied that repository for the high-level pipeline (ResNet50 transfer learning → fine-tuning → Grad-CAM → deployment) and reimplemented all code independently in this repository.
 
