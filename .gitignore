@@ -1,13 +1,40 @@
+# Virtual environments
 venv/
 env/
+.venv/
+
+# Secrets
 .env
+
+# Python cache
 __pycache__/
 *.pyc
+*.pyo
+.pytest_cache/
+.mypy_cache/
+
+# Model weights (train or download — do not commit)
+model/weights/*
+!model/weights/.gitkeep
+model_weights/
+*.keras
+*.h5
+*.pth
+*.pt
+
+# Dataset (large — use Kaggle / Colab)
 data/*
 !data/.gitkeep
 !data/README.md
-model_weights/
-*.pth
-*.pt
-*.h5
+
+# Jupyter
 .ipynb_checkpoints/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Streamlit
+.streamlit/secrets.toml

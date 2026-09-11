@@ -1,9 +1,16 @@
-torch
-torchvision
-scikit-learn
-pandas
-numpy
-streamlit
-pillow
-requests
-python-dotenv
+# Core ML
+tensorflow>=2.15,<2.18
+scikit-learn>=1.3
+numpy>=1.24
+pillow>=10.0
+
+# App & demo
+streamlit>=1.28
+opencv-python>=4.8
+
+# LLM advice layer
+huggingface_hub>=0.20
+python-dotenv>=1.0
+
+# Colab / training (optional locally)
+kaggle>=1.6

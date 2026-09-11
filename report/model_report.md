@@ -1,22 +1,42 @@
-# Model Report
+# AgriSmart AI — Model Report
 
-## Task
-Crop disease detection from images.
+## Objective
 
-## Data & Split
-- Dataset: (To be added)
-- Train/Val/Test Split: (To be added)
+Classify plant leaf diseases across 38 PlantVillage classes using ResNet50 transfer learning.
 
-## Model
-- Architecture: (To be added)
+## Architecture
 
-## Metric & Result
-- Metrics used: Macro-F1, Accuracy
-- Results: (To be added)
+```
+Input (224×224×3)
+    ↓
+ResNet50 (ImageNet, partially fine-tuned)
+    ↓
+GlobalAveragePooling2D
+    ↓
+Dense(256, ReLU) → Dropout(0.4) → Dense(38, Softmax)
+```
 
-## Baseline
-- Baseline model: (To be added)
-- Comparison: (To be added)
+## Training protocol
 
-## Limitations
-- (To be added)
+1. **Phase 1:** Freeze ResNet50; train head only @ lr=1e-4
+2. **Phase 2:** Unfreeze last 30 layers; fine-tune @ lr=1e-5
+3. **Split:** Stratified 70/15/15 train/val/test
+4. **Callbacks:** EarlyStopping (patience=5), ReduceLROnPlateau
+
+## Results
+
+| Metric | Value |
+|--------|-------|
+| Test accuracy | _Run training to populate_ |
+| Test loss | _Run training to populate_ |
+
+Metrics are saved to `model/weights/training_metrics.json` after `model/train.py` completes.
+
+## Explainability
+
+Grad-CAM (`model/gradcam.py`) highlights image regions that drive predictions — useful for farmer trust and demo presentations.
+
+## References
+
+- PlantVillage dataset (Kaggle)
+- Architecture inspiration: [Ishaaq09 plant disease repo](https://github.com/Ishaaq09/Automated_plant_disease_detection_using_Deep_Learning_and_Transfer_Learning)
