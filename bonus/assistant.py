@@ -2,7 +2,7 @@
 AgriSmart AI — GenAI farmer assistant (Bonus D).
 
 Generates plain-language treatment and prevention advice after CNN prediction,
-using the Google Gemini API (gemini-2.0-flash / gemini-1.5-flash).
+using the Groq API (llama3-8b-8192).
 """
 
 from __future__ import annotations
@@ -20,8 +20,7 @@ FALLBACK_MESSAGE = (
     "agricultural extension office for disease-specific treatment."
 )
 
-MODEL_ID = "gemini-2.0-flash"
-FALLBACK_MODEL_ID = "gemini-1.5-flash"
+MODEL_ID = "llama3-8b-8192"
 
 
 def _parse_crop_and_disease(disease_class: str) -> tuple[str, str]:
@@ -88,30 +87,34 @@ def get_care_advice(disease_class: str) -> str:
         disease_class: PlantVillage-style label, e.g. 'Tomato___Early_blight'
 
     Returns:
-        Advice string (from Gemini LLM or graceful fallback).
+        Advice string (from Groq LLM or graceful fallback).
     """
-    api_key = os.getenv("GEMINI_API_KEY")
+    api_key = os.getenv("GROQ_API_KEY")
     if not api_key or api_key.strip() in ("", "your_key_here"):
         return (
             _canned_advice(disease_class)
-            + "\n\n(Note: Set GEMINI_API_KEY in .env for AI-generated advice.)"
+            + "\n\n(Note: Set GROQ_API_KEY in .env for AI-generated advice.)"
         )
 
     try:
-        import google.generativeai as genai
-
-        genai.configure(api_key=api_key)
+        from groq import Groq
+        client = Groq(api_key=api_key)
+        
         prompt = _build_prompt(disease_class)
 
-        try:
-            model = genai.GenerativeModel(MODEL_ID)
-            response = model.generate_content(prompt)
-        except Exception:
-            # Fallback to gemini-1.5-flash if 2.0-flash is unavailable
-            model = genai.GenerativeModel(FALLBACK_MODEL_ID)
-            response = model.generate_content(prompt)
+        chat_completion = client.chat.completions.create(
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt,
+                }
+            ],
+            model=MODEL_ID,
+            temperature=0.7,
+            max_tokens=300,
+        )
 
-        text = response.text.strip() if response and hasattr(response, "text") and response.text else ""
+        text = chat_completion.choices[0].message.content.strip()
         return text if text else _canned_advice(disease_class)
 
     except ImportError:

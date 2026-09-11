@@ -1,48 +1,57 @@
-import { NavLink, useLocation } from 'react-router-dom'
-
-const links = [
-  { to: '/',         label: 'Home',    emoji: '🏠' },
-  { to: '/diagnose', label: 'Diagnose', emoji: '🔬' },
-  { to: '/about',    label: 'About',   emoji: '📋' },
-]
+import { NavLink, Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { Leaf, GitBranch, Menu, X } from 'lucide-react'
 
 export default function Navbar() {
-  const { pathname } = useLocation()
+  const [scrolled, setScrolled] = useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 12)
+    window.addEventListener('scroll', onScroll)
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   return (
-    <nav className="navbar" aria-label="Main navigation">
+    <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
       <div className="navbar-inner">
-        {/* Brand */}
-        <NavLink to="/" className="navbar-brand" id="nav-brand">
-          <span className="emoji">🌿</span>
-          AgriSmart AI
-        </NavLink>
+        <Link to="/" className="navbar-brand">
+          <div className="navbar-logo-icon">
+            <Leaf size={18} color="white" />
+          </div>
+          <span className="navbar-brand-name">
+            Agri<span>Smart</span> AI
+          </span>
+        </Link>
 
-        {/* Links */}
-        <ul className="navbar-links" role="list">
-          {links.map(({ to, label, emoji }) => (
-            <li key={to}>
-              <NavLink
-                to={to}
-                id={`nav-${label.toLowerCase()}`}
-                className={({ isActive }) => isActive ? 'active' : ''}
-                end={to === '/'}
-              >
-                <span>{emoji}</span>
-                {label}
-              </NavLink>
-            </li>
-          ))}
+        <ul className="navbar-links">
+          <li><NavLink to="/" className={({isActive}) => isActive ? 'active' : ''} end>Home</NavLink></li>
+          <li><NavLink to="/diagnose" className={({isActive}) => isActive ? 'active' : ''}>Diagnose</NavLink></li>
+          <li><NavLink to="/about" className={({isActive}) => isActive ? 'active' : ''}>About</NavLink></li>
           <li>
-            <NavLink
-              to="/diagnose"
-              id="nav-cta"
-              className="navbar-cta"
+            <a
+              href="https://github.com/Anshum25/agrismart-ai"
+              target="_blank" rel="noreferrer"
+              style={{ display: 'flex', alignItems: 'center', gap: 6 }}
             >
-              🚀 Diagnose Now
+              <GitBranch size={14} /> GitHub
+            </a>
+          </li>
+          <li>
+            <NavLink to="/diagnose" className="navbar-cta">
+              Try Demo →
             </NavLink>
           </li>
         </ul>
+
+        <button
+          className="btn btn-ghost btn-sm"
+          style={{ display: 'none' }}
+          onClick={() => setMobileOpen(!mobileOpen)}
+          aria-label="Menu"
+        >
+          {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+        </button>
       </div>
     </nav>
   )

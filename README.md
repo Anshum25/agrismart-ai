@@ -6,7 +6,7 @@
 [![React](https://img.shields.io/badge/Frontend-React%20%2B%20Vite-61DAFB?logo=react&logoColor=black)](https://reactjs.org/)
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 [![TensorFlow](https://img.shields.io/badge/Model-ResNet50%20(98.9%25)-FF6F00?logo=tensorflow&logoColor=white)](https://tensorflow.org/)
-[![Gemini](https://img.shields.io/badge/GenAI-Google%20Gemini%202.0-4285F4?logo=google&logoColor=white)](https://deepmind.google/technologies/gemini/)
+[![Groq](https://img.shields.io/badge/GenAI-Groq%20Llama%203-F55036?logo=groq&logoColor=white)](https://groq.com/)
 
 *Built for the Smart India Hackathon (SIH) 2026*
 
@@ -25,7 +25,7 @@ Instead of a "black box" prediction, AgriSmart provides **Explainable AI (XAI)**
 ### ✨ Key Features
 - **Real-Time Diagnosis:** Identifies 38 distinct plant diseases across 14 crop types in < 1 second.
 - **Explainable AI (Grad-CAM):** Visually highlights the lesions, discoloration, or fungal structures on the leaf that the neural network used to make its decision.
-- **AI Agronomist (Gemini 2.0):** Generates actionable, plain-language treatment plans, biological control methods, and preventive measures.
+- **AI Agronomist (Groq Llama 3):** Generates actionable, plain-language treatment plans, biological control methods, and preventive measures.
 - **Premium User Experience:** A stunning, glassmorphism-inspired React UI designed for maximum usability in the field.
 - **Scalable Architecture:** Fully decoupled React frontend and FastAPI backend, ready for edge deployments.
 
@@ -53,7 +53,7 @@ agrismart-ai/
 │   └── weights/            # Trained weights (.keras)
 │
 ├── bonus/                  # Smart Farming Modules
-│   └── assistant.py        # Google Gemini LLM Integration
+│   └── assistant.py        # Groq Llama 3 LLM Integration
 │
 └── notebooks/              # Google Colab Training Notebooks
 ```
@@ -94,7 +94,7 @@ pip install -r backend/requirements.txt
 
 # Start the API server
 cd backend
-python main.py
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
 ```
 > The API will be available at `http://localhost:8000`. It will attempt to load the model weights automatically.
 
@@ -117,13 +117,13 @@ npm run dev
 
 ## 🔑 Configuration (.env)
 
-To enable the **AI Agronomist** (LLM advice), you need a Google Gemini API key.
+To enable the **AI Agronomist** (LLM advice), you need a Groq API key.
 
-1. Get a free API key at [Google AI Studio](https://aistudio.google.com/apikey).
+1. Get a free API key at [console.groq.com](https://console.groq.com/keys).
 2. Copy `.env.example` to `.env` in the root directory.
 3. Add your key:
 ```env
-GEMINI_API_KEY=your_key_here
+GROQ_API_KEY=your_key_here
 ```
 *(If no key is provided, the backend gracefully falls back to generic care advice without crashing.)*
 
@@ -143,13 +143,13 @@ AgriSmart AI is designed for seamless deployment on platforms like [Railway.app]
 - **Deep Learning Layer:** TensorFlow 2, Keras, ResNet50, NumPy, OpenCV (for Grad-CAM image processing).
 - **Inference Server:** FastAPI, Uvicorn, Python-Multipart (for high-speed image uploads).
 - **Web Interface:** React 18, Vite, React Router, custom CSS (no heavy CSS frameworks).
-- **LLM Agent:** Google Generative AI SDK (Gemini 2.0 Flash).
+- **LLM Agent:** Groq Python SDK (Llama 3 8B).
 
 ---
 
 ## 🏆 Originality Declaration
 
-We declare that **AgriSmart AI** is our original implementation for this hackathon. The custom React frontend, FastAPI backend, the ResNet50 training pipeline (`model/train.py`), the Grad-CAM implementation (`model/gradcam.py`), and the integration of the Gemini LLM are entirely originally authored for this event.
+We declare that **AgriSmart AI** is our original implementation for this hackathon. The custom React frontend, FastAPI backend, the ResNet50 training pipeline (`model/train.py`), the Grad-CAM implementation (`model/gradcam.py`), and the integration of the Groq LLM are entirely originally authored for this event.
 
 ---
 
