@@ -212,13 +212,14 @@ async def predict_endpoint(file: UploadFile = File(...)):
     # Gemini care advice (graceful fallback built in)
     try:
         from bonus.assistant import get_care_advice
-        advice = get_care_advice(label)
+        advice_data = get_care_advice(label)
     except Exception:
-        advice = (
-            "Care advice is temporarily unavailable. General tips: remove affected leaves, "
-            "avoid overhead watering, improve air circulation, and consult your local "
-            "agricultural extension office for disease-specific treatment."
-        )
+        advice_data = {
+            "advice": "Care advice is temporarily unavailable. General tips: remove affected leaves, avoid overhead watering, improve air circulation, and consult your local agricultural extension office for disease-specific treatment.",
+            "irrigation_advice": "Irrigation advice is temporarily unavailable.",
+            "weather_risk": "Weather risk assessment is temporarily unavailable.",
+            "sustainability": "Sustainability options are temporarily unavailable."
+        }
 
     return {
         "label": label,
@@ -228,7 +229,10 @@ async def predict_endpoint(file: UploadFile = File(...)):
         "confidence_pct": f"{confidence:.1%}",
         "is_healthy": "healthy" in label.lower(),
         "severity": _severity(label, confidence),
-        "advice": advice,
+        "advice": advice_data.get("advice", ""),
+        "irrigation_advice": advice_data.get("irrigation_advice", ""),
+        "weather_risk": advice_data.get("weather_risk", ""),
+        "sustainability_advice": advice_data.get("sustainability", ""),
         "model_loaded": _model_loaded,
     }
 
@@ -275,12 +279,14 @@ async def predict_gradcam_endpoint(file: UploadFile = File(...)):
 
     try:
         from bonus.assistant import get_care_advice
-        advice = get_care_advice(label)
+        advice_data = get_care_advice(label)
     except Exception:
-        advice = (
-            "Care advice is temporarily unavailable. Remove affected leaves, "
-            "avoid overhead watering, improve air circulation."
-        )
+        advice_data = {
+            "advice": "Care advice is temporarily unavailable. Remove affected leaves, avoid overhead watering, improve air circulation.",
+            "irrigation_advice": "Irrigation advice is temporarily unavailable.",
+            "weather_risk": "Weather risk assessment is temporarily unavailable.",
+            "sustainability": "Sustainability options are temporarily unavailable."
+        }
 
     return {
         "label": label,
@@ -290,7 +296,10 @@ async def predict_gradcam_endpoint(file: UploadFile = File(...)):
         "confidence_pct": f"{confidence:.1%}",
         "is_healthy": "healthy" in label.lower(),
         "severity": _severity(label, confidence),
-        "advice": advice,
+        "advice": advice_data.get("advice", ""),
+        "irrigation_advice": advice_data.get("irrigation_advice", ""),
+        "weather_risk": advice_data.get("weather_risk", ""),
+        "sustainability_advice": advice_data.get("sustainability", ""),
         "model_loaded": _model_loaded,
         "original_image_b64": original_b64,
         "gradcam_image_b64": overlay_b64,

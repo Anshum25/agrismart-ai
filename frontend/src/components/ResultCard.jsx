@@ -57,7 +57,8 @@ function Accordion({ title, icon, children, defaultOpen = false }) {
 export default function ResultCard({ result, originalPreview }) {
   const {
     pretty_label, crop, label, confidence, confidence_pct,
-    gradcam_image_b64, advice, original_image_b64, model_loaded
+    gradcam_image_b64, advice, irrigation_advice, weather_risk, sustainability_advice,
+    original_image_b64, model_loaded
   } = result
 
   const sev = getSeverity(label, confidence)
@@ -173,19 +174,16 @@ export default function ResultCard({ result, originalPreview }) {
           </p>
           <div className="accordion">
             <Accordion title="Irrigation Advice" icon={<Droplets size={14} color="var(--forest-light)" />}>
-              {isHealthy
+              {irrigation_advice || (isHealthy
                 ? 'Continue regular watering schedule — deep watering once or twice per week for most crops. Avoid overhead irrigation to reduce humidity-related risks.'
                 : `For ${crop} affected by ${pretty_label}: reduce overhead irrigation immediately. Use drip irrigation to deliver water directly to roots. Allow topsoil to dry slightly between waterings.`
-              }
+              )}
             </Accordion>
             <Accordion title="Weather Risk Assessment" icon={<Cloud size={14} color="#2563eb" />}>
-              Humid conditions above 80% RH and temperatures between 20–28°C significantly increase fungal disease risk.
-              Monitor forecasts closely and apply preventive fungicide sprays before forecast rain events lasting more than 6 hours.
+              {weather_risk || 'Humid conditions above 80% RH and temperatures between 20–28°C significantly increase fungal disease risk. Monitor forecasts closely and apply preventive fungicide sprays before forecast rain events lasting more than 6 hours.'}
             </Accordion>
             <Accordion title="Sustainability & Organic Options" icon={<Recycle size={14} color="var(--amber)" />}>
-              Organic alternatives: neem oil spray (5ml/L), copper-based formulations, or Trichoderma biofungicides.
-              These are effective for early-stage infections and approved for certified organic operations.
-              Rotate with synthetic fungicides (different MOA groups) to prevent resistance development.
+              {sustainability_advice || 'Organic alternatives: neem oil spray (5ml/L), copper-based formulations, or Trichoderma biofungicides. These are effective for early-stage infections and approved for certified organic operations. Rotate with synthetic fungicides (different MOA groups) to prevent resistance development.'}
             </Accordion>
           </div>
         </div>
