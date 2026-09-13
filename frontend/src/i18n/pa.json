@@ -64,5 +64,12 @@
   "share.done": "ਸਾਂਝਾ ਹੋ ਗਿਆ। ਧੰਨਵਾਦ!",
   "map.title": "ਫ਼ਸਲ ਰੋਗ ਫੈਲਾਅ ਨਕਸ਼ਾ",
   "map.alertsTitle": "ਤੁਹਾਡੇ ਨੇੜੇ ਦੀਆਂ ਚੇਤਾਵਨੀਆਂ",
-  "map.findAlerts": "ਮੇਰਾ ਇਲਾਕਾ ਜਾਂਚੋ"
+  "map.findAlerts": "ਮੇਰਾ ਇਲਾਕਾ ਜਾਂਚੋ",
+  "diag.tab.live": "ਲਾਈਵ",
+  "live.fullReport": "ਪੂਰੀ ਰਿਪੋਰਟ",
+  "health.allGood": "100% ਸਿਹਤਮੰਦ — ਵਧੀਆ ਹੈ",
+  "health.allGoodShort": "100% ਸਿਹਤਮੰਦ",
+  "health.needsCare": "ਰੋਗ ਮਿਲਿਆ — ਦੇਖਭਾਲ ਲੋੜੀਂਦੀ",
+  "health.good": "ਚੰਗਾ",
+  "health.bad": "ਖ਼ਰਾਬ"
 }

@@ -1,0 +1,112 @@
+{
+  "version": 1,
+  "model_file": "agrismart.onnx",
+  "sha256": "1c7fb6bbba863b0e04f6d9fb7acd98753e8fb728f256621218873563def4fc3e",
+  "quantization": "fp32",
+  "input_name": "image",
+  "input_layout": "NHWC",
+  "input_size": [
+    224,
+    224
+  ],
+  "preprocess": "resnet50_caffe_bgr_mean",
+  "features_output": "features",
+  "probs_output": "probs",
+  "feature_shape": [
+    7,
+    7,
+    2048
+  ],
+  "head": {
+    "file": "head_weights.bin",
+    "dtype": "float32",
+    "layout": [
+      [
+        "W1",
+        [
+          2048,
+          256
+        ]
+      ],
+      [
+        "b1",
+        [
+          256
+        ]
+      ],
+      [
+        "W2",
+        [
+          256,
+          38
+        ]
+      ],
+      [
+        "b2",
+        [
+          38
+        ]
+      ]
+    ]
+  },
+  "labels": [
+    "Apple___Apple_scab",
+    "Apple___Black_rot",
+    "Apple___Cedar_apple_rust",
+    "Apple___healthy",
+    "Blueberry___healthy",
+    "Cherry_(including_sour)___Powdery_mildew",
+    "Cherry_(including_sour)___healthy",
+    "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot",
+    "Corn_(maize)___Common_rust_",
+    "Corn_(maize)___Northern_Leaf_Blight",
+    "Corn_(maize)___healthy",
+    "Grape___Black_rot",
+    "Grape___Esca_(Black_Measles)",
+    "Grape___Leaf_blight_(Isariopsis_Leaf_Spot)",
+    "Grape___healthy",
+    "Orange___Haunglongbing_(Citrus_greening)",
+    "Peach___Bacterial_spot",
+    "Peach___healthy",
+    "Pepper,_bell___Bacterial_spot",
+    "Pepper,_bell___healthy",
+    "Potato___Early_blight",
+    "Potato___Late_blight",
+    "Potato___healthy",
+    "Raspberry___healthy",
+    "Soybean___healthy",
+    "Squash___Powdery_mildew",
+    "Strawberry___Leaf_scorch",
+    "Strawberry___healthy",
+    "Tomato___Bacterial_spot",
+    "Tomato___Early_blight",
+    "Tomato___Late_blight",
+    "Tomato___Leaf_Mold",
+    "Tomato___Septoria_leaf_spot",
+    "Tomato___Spider_mites Two-spotted_spider_mite",
+    "Tomato___Target_Spot",
+    "Tomato___Tomato_Yellow_Leaf_Curl_Virus",
+    "Tomato___Tomato_mosaic_virus",
+    "Tomato___healthy"
+  ],
+  "parity": {
+    "exporter": "keras-torch-backend",
+    "keras_file": "agrismart_resnet50_phase1.keras",
+    "training_metrics": {
+      "test_accuracy": 0.9504051208496094,
+      "test_loss": 0.16063453257083893
+    },
+    "parity_images": 200,
+    "split_note": "Stratified split recomputed locally (random_state=42, sorted paths); it may not match the training run's split exactly, so these accuracies can be optimistic. Use training_metrics for the official held-out number.",
+    "keras_accuracy": 0.92,
+    "fp32_accuracy": 0.92,
+    "fp32_top1_agreement": 1.0,
+    "fp32_max_abs_prob_diff": 1.4901161193847656e-06,
+    "gradcam_cosine_similarity_mean": 0.9397160927454631,
+    "int8_accuracy": 0.91,
+    "int8_top1_agreement": 0.93,
+    "eval_images": 1500,
+    "eval_accuracy": 0.886,
+    "shipped_quantization": "fp32"
+  }
+}

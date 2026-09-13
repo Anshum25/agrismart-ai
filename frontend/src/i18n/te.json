@@ -64,5 +64,12 @@
   "share.done": "పంచుకోబడింది. ధన్యవాదాలు!",
   "map.title": "పంట వ్యాధి వ్యాప్తి మ్యాప్",
   "map.alertsTitle": "మీ సమీపంలోని హెచ్చరికలు",
-  "map.findAlerts": "నా ప్రాంతాన్ని తనిఖీ చేయండి"
+  "map.findAlerts": "నా ప్రాంతాన్ని తనిఖీ చేయండి",
+  "diag.tab.live": "లైవ్",
+  "live.fullReport": "పూర్తి నివేదిక",
+  "health.allGood": "100% ఆరోగ్యంగా ఉంది — బాగుంది",
+  "health.allGoodShort": "100% ఆరోగ్యం",
+  "health.needsCare": "వ్యాధి గుర్తించబడింది — జాగ్రత్త అవసరం",
+  "health.good": "మంచిది",
+  "health.bad": "చెడు"
 }

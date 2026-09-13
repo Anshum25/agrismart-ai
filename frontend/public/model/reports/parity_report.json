@@ -1,0 +1,20 @@
+{
+  "exporter": "keras-torch-backend",
+  "keras_file": "agrismart_resnet50_phase1.keras",
+  "training_metrics": {
+    "test_accuracy": 0.9504051208496094,
+    "test_loss": 0.16063453257083893
+  },
+  "parity_images": 200,
+  "split_note": "Stratified split recomputed locally (random_state=42, sorted paths); it may not match the training run's split exactly, so these accuracies can be optimistic. Use training_metrics for the official held-out number.",
+  "keras_accuracy": 0.92,
+  "fp32_accuracy": 0.92,
+  "fp32_top1_agreement": 1.0,
+  "fp32_max_abs_prob_diff": 1.4901161193847656e-06,
+  "gradcam_cosine_similarity_mean": 0.9397160927454631,
+  "int8_accuracy": 0.91,
+  "int8_top1_agreement": 0.93,
+  "eval_images": 1500,
+  "eval_accuracy": 0.886,
+  "shipped_quantization": "fp32"
+}

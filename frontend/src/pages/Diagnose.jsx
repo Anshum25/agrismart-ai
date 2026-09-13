@@ -3,8 +3,9 @@ import { useDropzone } from 'react-dropzone'
 import Webcam from 'react-webcam'
 import toast from 'react-hot-toast'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Upload, Camera, ImageIcon, X, Loader2, CheckCircle, MapPin, Smartphone, Server, AlertTriangle } from 'lucide-react'
+import { Upload, Camera, ImageIcon, X, Loader2, CheckCircle, MapPin, Smartphone, Server, AlertTriangle, ScanLine } from 'lucide-react'
 import ResultCard, { RejectCard } from '../components/ResultCard'
+import LiveScan from '../components/LiveScan'
 import { useI18n } from '../i18n'
 import { api } from '../lib/api'
 import { diagnoseOnDevice, loadModel, subscribeModelStatus } from '../lib/inference'
@@ -130,15 +131,23 @@ export default function Diagnose() {
     }
   }
 
-  const handleAnalyze = async () => {
-    if (!file) return
+  // "Get full report" from live mode: run the normal photo pipeline on the captured frame.
+  const handleLiveReport = liveFile => {
+    selectFile(liveFile)
+    setTab('upload')
+    handleAnalyze(liveFile)
+  }
+
+  const handleAnalyze = async (target = file) => {
+    if (!(target instanceof Blob)) target = file
+    if (!target) return
     setLoading(true)
     setResult(null)
     try {
-      const data = await runDiagnosis(file)
+      const data = await runDiagnosis(target)
       setResult(data)
       if (data.status !== 'rejected') {
-        await saveToHistory(data, previewUrl)
+        await saveToHistory(data, target === file && previewUrl ? previewUrl : URL.createObjectURL(target))
         setHistory(await getHistory())
       }
       setTimeout(() => document.getElementById('result-panel')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100)
@@ -168,7 +177,7 @@ export default function Diagnose() {
             <div className="card" style={{ padding: 0, overflow: 'hidden', marginBottom: 'var(--sp-4)' }}>
               <div style={{ padding: '16px 20px 0' }}>
                 <div className="tabs" role="tablist">
-                  {[['upload', Upload], ['camera', Camera], ['samples', ImageIcon]].map(([key, Icon]) => (
+                  {[['upload', Upload], ['camera', Camera], ['live', ScanLine], ['samples', ImageIcon]].map(([key, Icon]) => (
                     <button key={key} role="tab" aria-selected={tab === key} className={`tab-btn ${tab === key ? 'active' : ''}`} onClick={() => setTab(key)}>
                       <Icon size={14} /> {t(`diag.tab.${key}`)}
                     </button>
@@ -177,6 +186,8 @@ export default function Diagnose() {
               </div>
 
               <div style={{ padding: 20 }}>
+                {tab === 'live' && <LiveScan onFullReport={handleLiveReport} modelState={modelStatus.state} />}
+
                 {tab === 'upload' && (previewUrl ? (
                   <div className="image-preview">
                     <img src={previewUrl} alt={t('result.original')} />

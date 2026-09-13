@@ -24,17 +24,17 @@ const TECH_STACK = [
   { name: 'ResNet50', role: 'CNN backbone (ImageNet pretrained)', icon: <Layers size={18} />, color: 'feat-icon-green' },
   { name: 'FastAPI + Uvicorn', role: 'High-performance Python API server', icon: <Zap size={18} />, color: 'feat-icon-green' },
   { name: 'React + Vite', role: 'Modern frontend framework', icon: <Code2 size={18} />, color: 'feat-icon-blue' },
-  { name: 'Groq Llama 3.3 + Whisper', role: 'Vernacular advice and voice assistant', icon: <Brain size={18} />, color: 'feat-icon-amber' },
+  { name: 'Groq GPT-OSS 120B + Whisper', role: 'Vernacular advice and voice assistant', icon: <Brain size={18} />, color: 'feat-icon-amber' },
   { name: 'ONNX Runtime + Grad-CAM', role: 'On-device inference and explainability', icon: <Target size={18} />, color: 'feat-icon-red' },
 ]
 
 const ARCH_POINTS = [
   'Transfer learning from ImageNet — leverages visual feature representations learned from millions of images.',
-  'Two-phase fine-tuning: Phase 1 freezes the ResNet50 backbone and trains only the classification head. Phase 2 unfreezes the last 30 layers for domain-specific feature refinement.',
+  'The deployed checkpoint is Phase 1: the ResNet50 backbone is frozen and only the classification head is trained (88.6% accuracy verified on 1,500 PlantVillage images). Phase 2, unfreezing the last 30 layers, is supported by the training script and is the next accuracy improvement.',
   'Stratified 70/15/15 train/val/test split ensures representative class distribution across all splits.',
   'Augmentation pipeline: horizontal/vertical flips, random rotation (±25°), shifts, shear, zoom (15%) and brightness (0.8–1.2).',
   'Callbacks: EarlyStopping (patience=5), ReduceLROnPlateau (factor=0.5, patience=2), ModelCheckpoint for best weights.',
-  'Export: the Keras model is converted to a quantized ONNX model with two outputs (features + probabilities), verified against Keras for accuracy and Grad-CAM parity, and runs both in the browser and on the API.',
+  'Export: the Keras model is converted to an ONNX model with two outputs (features + probabilities), verified against Keras for accuracy and Grad-CAM parity, and runs both in the browser and on the API.',
 ]
 
 export default function About() {
@@ -118,7 +118,7 @@ export default function About() {
                   { num: '40%', desc: 'of global food production lost to disease & pests annually' },
                   { num: '$220B', desc: 'annual economic cost of crop disease worldwide' },
                   { num: '38', desc: 'disease classes detected by AgriSmart AI' },
-                  { num: '98.96%', desc: 'test accuracy on PlantVillage held-out split' },
+                  { num: '88.6%', desc: 'verified accuracy of the deployed model (PlantVillage)' },
                 ].map(s => (
                   <div key={s.num} className="metric-card">
                     <div className="metric-value">{s.num}</div>

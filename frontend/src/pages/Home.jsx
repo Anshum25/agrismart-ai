@@ -45,7 +45,7 @@ const TECH_STACK = [
   { name: 'Grad-CAM', color: '#7c3aed', icon: '🔥' },
   { name: 'FastAPI', color: '#009688', icon: '⚡' },
   { name: 'React PWA', color: '#61DAFB', icon: '⚛️' },
-  { name: 'Groq Llama 3.3', color: '#F55036', icon: '🤖' },
+  { name: 'Groq GPT-OSS 120B', color: '#F55036', icon: '🤖' },
   { name: 'Whisper speech-to-text', color: '#10a37f', icon: '🎙️' },
   { name: 'Open-Meteo', color: '#2563eb', icon: '🌦️' },
   { name: 'Leaflet + OpenStreetMap', color: '#199900', icon: '🗺️' },
@@ -118,7 +118,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .45 }}
               >
                 {[
-                  { val: '98.96%', label: 'Test Accuracy*' },
+                  { val: '88.6%', label: 'Verified Accuracy*' },
                   { val: '38', label: 'Disease Classes' },
                   { val: '9', label: 'Languages' },
                   { val: 'Offline', label: 'On-device AI' },
@@ -249,7 +249,7 @@ export default function Home() {
                 </div>
                 <div>
                   <h3 style={{ marginBottom: 8 }}>ResNet50 Architecture — Exactly What's Running</h3>
-                  <p style={{ marginBottom: 20, fontSize: '.95rem' }}>Transfer learning on ImageNet weights, fine-tuned with two-phase progressive unfreezing, then exported to a quantized ONNX model that runs in the browser and on the server.</p>
+                  <p style={{ marginBottom: 20, fontSize: '.95rem' }}>Transfer learning on ImageNet weights (frozen backbone, trained classification head), then exported to an ONNX model that runs in the browser and on the server.</p>
                   {/* Architecture flow */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', overflowX: 'auto', paddingBottom: 4 }}>
                     {[
@@ -332,8 +332,14 @@ export default function Home() {
                 desc: 'Install the app once; diagnosis, Grad-CAM, treatment guides and scan history keep working with no internet in the field.',
               },
               {
+                icon: <Camera size={22} />, color: 'feat-icon-red',
+                badge: '✅ Live · OpenCV-style detection + ONNX',
+                title: 'Live Camera Scan',
+                desc: 'Point the camera at a leaf: it is detected, cropped and diagnosed continuously with a Good/Bad health meter — no photo needed. Healthy leaves show "100% healthy".',
+              },
+              {
                 icon: <MessageCircle size={22} />, color: 'feat-icon-amber',
-                badge: '✅ Live · Groq Llama 3.3 + Whisper',
+                badge: '✅ Live · Groq GPT-OSS 120B + Whisper',
                 title: 'Vernacular Advice & Voice Assistant',
                 desc: 'Structured treatment plans (organic and chemical, with doses) in 9 Indian languages, read aloud. Farmers can ask follow-up questions by voice.',
               },
@@ -395,12 +401,12 @@ export default function Home() {
 
           <div className="transparency-grid">
             {[
-              { val: '98.96%', label: 'Test Accuracy', desc: 'Held-out 15% stratified split — unseen during training.' },
-              { val: '98.85%', label: 'Validation Accuracy', desc: 'Measured every epoch during training on a 15% val split.' },
-              { val: '0.0324', label: 'Test Loss', desc: 'Categorical cross-entropy on the test set.' },
+              { val: '88.6%', label: 'Verified Accuracy', desc: 'Deployed ONNX model on 1,500 PlantVillage images (macro F1 0.82). Report in /model/reports.' },
+              { val: '100%', label: 'ONNX = Keras', desc: 'Browser/server model gives the same prediction as the Keras model on every checked image.' },
+              { val: 'Next', label: 'Phase-2 Fine-tuning', desc: 'Weak classes today: potato healthy, tomato mosaic virus, tomato early blight. Fine-tuning is the next step.' },
               { val: '38', label: 'Classes Detected', desc: '14 crop species, including Tomato, Potato, Apple, Grape, Corn.' },
               { val: '54,306', label: 'Training Images', desc: 'PlantVillage color dataset — stratified 70/15/15 split.' },
-              { val: '2-phase', label: 'Fine-Tuning Strategy', desc: 'Frozen backbone → unfreeze last 30 layers at lr=1e-5.' },
+              { val: 'Phase 1', label: 'Training Stage', desc: 'Frozen ResNet50 backbone + trained head. Phase-2 fine-tuning (last 30 layers) is the next accuracy step.' },
             ].map((item, i) => (
               <FadeUp key={item.label} delay={i * .06}>
                 <div className="transparency-card">
@@ -567,7 +573,7 @@ export default function Home() {
               <div className="footer-brand">🌿 AgriSmart AI</div>
               <p className="footer-desc">
                 AI-powered plant disease diagnostic platform built for the Smart India Hackathon 2026.
-                ResNet50 · Grad-CAM · ONNX · Groq Llama 3.3 · FastAPI · React PWA.
+                ResNet50 · Grad-CAM · ONNX · Groq GPT-OSS 120B · FastAPI · React PWA.
               </p>
               <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 20 }}>
                 {['SIH 2026', 'Open Source', 'Explainable AI', 'Agriculture'].map(b => (

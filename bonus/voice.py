@@ -11,7 +11,7 @@ import json
 import os
 from typing import Any
 
-from bonus.assistant import MODEL_ID, groq_client, kb_advice
+from bonus.assistant import MODEL_ID, chat_options, groq_client, kb_advice
 from bonus.languages import language_name, normalize_lang
 from model.labels import format_label
 
@@ -69,7 +69,8 @@ def answer_question(question: str, lang: str, context: dict[str, Any] | None = N
                 {"role": "user", "content": f"{grounding}Farmer's question: {question}"},
             ],
             temperature=0.4,
-            max_tokens=300,
+            max_tokens=1200,
+            **chat_options(),
         )
     except Exception as exc:
         raise VoiceUnavailable(f"Assistant failed: {type(exc).__name__}") from exc

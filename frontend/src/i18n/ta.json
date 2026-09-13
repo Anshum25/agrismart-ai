@@ -64,5 +64,12 @@
   "share.done": "பகிரப்பட்டது. நன்றி!",
   "map.title": "பயிர் நோய் பரவல் வரைபடம்",
   "map.alertsTitle": "உங்கள் அருகிலுள்ள எச்சரிக்கைகள்",
-  "map.findAlerts": "என் பகுதியைச் சரிபார்"
+  "map.findAlerts": "என் பகுதியைச் சரிபார்",
+  "diag.tab.live": "நேரலை",
+  "live.fullReport": "முழு அறிக்கை",
+  "health.allGood": "100% ஆரோக்கியம் — நன்றாக உள்ளது",
+  "health.allGoodShort": "100% ஆரோக்கியம்",
+  "health.needsCare": "நோய் கண்டறியப்பட்டது — கவனிப்பு தேவை",
+  "health.good": "நல்லது",
+  "health.bad": "பாதிப்பு"
 }

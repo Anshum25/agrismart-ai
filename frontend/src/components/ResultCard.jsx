@@ -1,6 +1,7 @@
 import { AlertTriangle, Info, Smartphone, Server, Camera } from 'lucide-react'
 import { useI18n } from '../i18n'
 import AdvicePanel, { useAdvice } from './AdvicePanel'
+import HealthMeter from './HealthMeter'
 import VoiceAssistant from './VoiceAssistant'
 import InsightsPanel from './InsightsPanel'
 import SharePanel from './SharePanel'
@@ -73,6 +74,8 @@ export default function ResultCard({ result, previewUrl, location, onRequestLoca
           {result.warnings?.includes('slightly_blurry') && (
             <div className="alert alert-info"><Info size={16} /> <span>{t('result.slightlyBlurry')}</span></div>
           )}
+
+          <HealthMeter health={result.health} isHealthy={result.is_healthy} />
 
           <div className="image-pair">
             {previewUrl && (

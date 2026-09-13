@@ -40,8 +40,8 @@ from model.runtime import (  # noqa: E402
     IMG_SIZE,
     HeadWeights,
     gradcam_from_features,
+    model_input,
     preprocess,
-    resize,
     sha256_file,
 )
 
@@ -81,7 +81,7 @@ def load_labels(path: Path) -> list[str]:
 
 
 def load_rgb224(path: str) -> np.ndarray:
-    return resize(np.asarray(Image.open(path).convert("RGB")), IMG_SIZE)
+    return model_input(np.asarray(Image.open(path).convert("RGB")))
 
 
 def build_two_output_model(tf, model):
@@ -148,12 +148,18 @@ def quantize(fp32_path: Path, int8_path: Path, calib_paths: list[str], input_nam
             path = next(self._it, None)
             return None if path is None else {input_name: preprocess(load_rgb224(path))}
 
+    flush_every = 8
+    if len(calib_paths) % flush_every == 0:
+        # onnxruntime raises "No data is collected" when the final flushed batch is empty.
+        calib_paths = calib_paths[:-1]
     pre_path = fp32_path.with_name("agrismart_pre.onnx")
     quant_pre_process(str(fp32_path), str(pre_path))
     quantize_static(
         str(pre_path), str(int8_path), Reader(),
         quant_format=QuantFormat.QDQ, per_channel=True,
         activation_type=QuantType.QUInt8, weight_type=QuantType.QInt8,
+        # Flush collected activations regularly so calibration fits in a few GB of RAM.
+        extra_options={"CalibMaxIntermediateOutputs": flush_every},
     )
 
 

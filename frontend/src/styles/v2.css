@@ -209,3 +209,46 @@ body { overflow-x: hidden; }
 .result-header .severity-low      { background: #fde68a; color: #78350f; }
 .result-header .severity-moderate { background: #fdba74; color: #7c2d12; }
 .result-header .severity-high     { background: #fca5a5; color: #7f1d1d; }
+
+/* --- Tabs: allow 4 tabs on small screens ------------------ */
+.tabs { max-width: 100%; overflow-x: auto; }
+.tab-btn { white-space: nowrap; }
+
+/* --- Health meter (good vs bad share of the leaf) --------- */
+.health-meter { margin-bottom: var(--sp-5); }
+.health-meter.compact { margin-bottom: var(--sp-2); }
+.health-meter-head { margin-bottom: 8px; }
+.health-verdict { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: .95rem; }
+.health-verdict.good { color: #047857; }
+.health-verdict.bad { color: #b45309; }
+.health-bar { display: flex; height: 12px; border-radius: 99px; overflow: hidden; background: var(--ink-100); }
+.health-good { background: linear-gradient(90deg, #34d399, #059669); transition: width .4s var(--ease); }
+.health-bad { background: linear-gradient(90deg, #f59e0b, #dc2626); transition: width .4s var(--ease); }
+.health-legend { display: flex; justify-content: space-between; margin-top: 6px; font-size: .82rem; color: var(--ink-700); }
+.health-legend .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 4px; }
+.health-legend .dot.good { background: #059669; }
+.health-legend .dot.bad { background: #dc2626; }
+
+/* --- Live scan --------------------------------------------- */
+.live-scan { display: flex; flex-direction: column; gap: var(--sp-3); }
+.live-stage { position: relative; border-radius: var(--r-lg); overflow: hidden; background: #000; aspect-ratio: 4 / 3; }
+.live-video, .live-overlay { position: absolute; inset: 0; width: 100%; height: 100%; }
+.live-video { object-fit: fill; }
+.live-overlay { pointer-events: none; }
+.live-message { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 8px; color: #fff; text-align: center; padding: 16px; font-size: .9rem; }
+.live-hud { position: absolute; top: 8px; left: 8px; display: flex; align-items: center; gap: 6px; background: rgba(0,0,0,.55); color: #fff; font-size: .72rem; font-weight: 600; padding: 4px 10px; border-radius: 99px; }
+.live-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-400); }
+.live-dot.on { background: #ef4444; animation: pulse-rec 1.4s infinite; }
+.live-latency { opacity: .75; font-weight: 500; }
+.live-controls { display: flex; flex-wrap: wrap; gap: 8px; }
+.live-controls .btn-primary { margin-left: auto; }
+.live-result { background: var(--sand); border-radius: var(--r-md); padding: 12px 14px; }
+.live-label { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.05rem; color: var(--ink-900); }
+.live-sub { font-size: .8rem; color: var(--ink-500); margin-bottom: 10px; }
+.live-hint { display: flex; align-items: center; gap: 8px; font-weight: 600; color: var(--ink-700); font-size: .9rem; }
+.live-footnote { font-size: .75rem; color: var(--ink-500); margin-top: 8px; }
+
+/* Live HUD sits at the bottom so it never covers the leaf label; tabs share the card width */
+.live-hud { top: auto; bottom: 8px; }
+.tabs { width: 100%; }
+.tab-btn { flex: 1; justify-content: center; padding-left: 8px; padding-right: 8px; }

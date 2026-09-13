@@ -64,5 +64,12 @@
   "share.done": "শেয়ার হয়েছে। ধন্যবাদ!",
   "map.title": "ফসলের রোগ প্রাদুর্ভাব মানচিত্র",
   "map.alertsTitle": "আপনার কাছের সতর্কতা",
-  "map.findAlerts": "আমার এলাকা দেখুন"
+  "map.findAlerts": "আমার এলাকা দেখুন",
+  "diag.tab.live": "লাইভ",
+  "live.fullReport": "সম্পূর্ণ রিপোর্ট",
+  "health.allGood": "১০০% সুস্থ — ভালো আছে",
+  "health.allGoodShort": "১০০% সুস্থ",
+  "health.needsCare": "রোগ শনাক্ত — যত্ন দরকার",
+  "health.good": "ভালো",
+  "health.bad": "খারাপ"
 }

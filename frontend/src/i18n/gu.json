@@ -64,5 +64,12 @@
   "share.done": "શેર થઈ ગયું. આભાર!",
   "map.title": "પાક રોગ ફાટી નીકળવાનો નકશો",
   "map.alertsTitle": "તમારી નજીકની ચેતવણીઓ",
-  "map.findAlerts": "મારો વિસ્તાર તપાસો"
+  "map.findAlerts": "મારો વિસ્તાર તપાસો",
+  "diag.tab.live": "લાઇવ",
+  "live.fullReport": "સંપૂર્ણ રિપોર્ટ",
+  "health.allGood": "100% તંદુરસ્ત — સારું છે",
+  "health.allGoodShort": "100% તંદુરસ્ત",
+  "health.needsCare": "રોગ મળ્યો — કાળજી જરૂરી",
+  "health.good": "સારું",
+  "health.bad": "ખરાબ"
 }

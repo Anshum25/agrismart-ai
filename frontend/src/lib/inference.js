@@ -15,7 +15,10 @@ export const QUALITY = {
   "blurReject": 10,
   "blurWarn": 40,
   "minConfidence": 0.6,
-  "minMargin": 0.2
+  "minMargin": 0.2,
+  "cropPad": 1.0,
+  "cropMaxArea": 0.8,
+  "cropMinArea": 0.02
 }
 
 export const SEVERITY = {
@@ -134,6 +137,29 @@ function drawToCanvas(source, width, height) {
   return { canvas, ctx }
 }
 
+function sourceSize(s) {
+  return { width: s.videoWidth || s.naturalWidth || s.width, height: s.videoHeight || s.naturalHeight || s.height }
+}
+
+const TRAIN_SOURCE_SIZE = 256
+
+/**
+ * Resize like training (mirror of model/runtime.py:model_input): smooth downscale to
+ * 256px, then nearest-neighbour to 224px as Keras flow_from_directory does.
+ */
+function modelInputCanvas(source) {
+  const { width, height } = sourceSize(source)
+  let src = source
+  if (Math.max(width, height) > TRAIN_SOURCE_SIZE) src = drawToCanvas(source, TRAIN_SOURCE_SIZE, TRAIN_SOURCE_SIZE).canvas
+  const canvas = document.createElement('canvas')
+  canvas.width = IMG
+  canvas.height = IMG
+  const ctx = canvas.getContext('2d', { willReadFrequently: true })
+  ctx.imageSmoothingEnabled = false
+  ctx.drawImage(src, 0, 0, IMG, IMG)
+  return { canvas, ctx }
+}
+
 function rgbToHsvCv(r, g, b) {
   const v = Math.max(r, g, b)
   const mn = Math.min(r, g, b)
@@ -188,6 +214,7 @@ export function analyseImage(rgba224, rgbaSmall) {
   for (let i = 0; i < n; i++) {
     if (!outside[i]) { leafPx++; if (!green[i]) affected++ }
   }
+  const leafBox = largestLeafBox(outside, ANALYSIS, ANALYSIS)
 
   // Brightness + Laplacian variance on the 224px model input.
   const gray = new Float32Array(IMG * IMG)
@@ -216,7 +243,87 @@ export function analyseImage(rgba224, rgbaSmall) {
     brightness: round(sum / (IMG * IMG), 1),
     sharpness: round(lapSq / count - lapMean * lapMean, 1),
     affected_area_pct: leafPx ? round((100 * affected) / leafPx, 1) : 0,
+    leaf_box: leafBox,
   }
+}
+
+/** Bounding box (normalised 0..1) of the largest connected leaf region, like cv2.findContours + boundingRect. */
+function largestLeafBox(outside, w, h) {
+  const seen = new Uint8Array(w * h)
+  const queue = new Int32Array(w * h)
+  let best = null
+  for (let start = 0; start < w * h; start++) {
+    if (outside[start] || seen[start]) continue
+    let head_ = 0
+    let tail = 0
+    queue[tail++] = start
+    seen[start] = 1
+    let minX = w, minY = h, maxX = 0, maxY = 0
+    while (head_ < tail) {
+      const i = queue[head_++]
+      const x = i % w
+      const y = (i - x) / w
+      if (x < minX) minX = x
+      if (x > maxX) maxX = x
+      if (y < minY) minY = y
+      if (y > maxY) maxY = y
+      const next = [y > 0 ? i - w : -1, y < h - 1 ? i + w : -1, x > 0 ? i - 1 : -1, x < w - 1 ? i + 1 : -1]
+      for (const j of next) {
+        if (j >= 0 && !outside[j] && !seen[j]) { seen[j] = 1; queue[tail++] = j }
+      }
+    }
+    if (!best || tail > best.size) best = { size: tail, minX, minY, maxX, maxY }
+  }
+  if (!best || best.size < w * h * QUALITY.cropMinArea) return null
+  return { x: best.minX / w, y: best.minY / h, w: (best.maxX - best.minX + 1) / w, h: (best.maxY - best.minY + 1) / h }
+}
+
+/**
+ * Detect the largest leaf (HSV plant mask -> fill holes -> largest connected component),
+ * mirror of model/runtime.py:locate_leaf. Returns a normalised box or null.
+ */
+export function locateLeaf(source) {
+  const { ctx } = drawToCanvas(source, ANALYSIS, ANALYSIS)
+  const rgba = ctx.getImageData(0, 0, ANALYSIS, ANALYSIS).data
+  const n = ANALYSIS * ANALYSIS
+  const plant = new Uint8Array(n)
+  for (let i = 0; i < n; i++) {
+    const [h, sat, v] = rgbToHsvCv(rgba[i * 4], rgba[i * 4 + 1], rgba[i * 4 + 2])
+    if (sat >= 40 && v >= 40 && h >= 8 && h <= 95) plant[i] = 1
+  }
+  const box = largestLeafBox(fillHoles(plant, ANALYSIS, ANALYSIS), ANALYSIS, ANALYSIS)
+  return box
+}
+
+/** Square crop around the detected leaf (mirror of model/runtime.py:crop_to_leaf). */
+export function cropToLeaf(source, box) {
+  const full = { x: 0, y: 0, w: 1, h: 1 }
+  if (!box) return { source, rect: full }
+  const { width, height } = sourceSize(source)
+  const bw = box.w * width
+  const bh = box.h * height
+  if (bw * bh > QUALITY.cropMaxArea * width * height) return { source, rect: full }
+  const side = Math.round(Math.min(Math.max(bw, bh) * QUALITY.cropPad, width, height))
+  const cx = (box.x + box.w / 2) * width
+  const cy = (box.y + box.h / 2) * height
+  const x0 = Math.round(Math.min(Math.max(cx - side / 2, 0), width - side))
+  const y0 = Math.round(Math.min(Math.max(cy - side / 2, 0), height - side))
+  const out = Math.min(side, 512)
+  const canvas = document.createElement('canvas')
+  canvas.width = out
+  canvas.height = out
+  const ctx = canvas.getContext('2d')
+  ctx.imageSmoothingEnabled = true
+  ctx.imageSmoothingQuality = 'high'
+  ctx.drawImage(source, x0, y0, side, side, 0, 0, out, out)
+  return { source: canvas, rect: { x: x0 / width, y: y0 / height, w: side / width, h: side / height } }
+}
+
+/** Good vs bad share of the leaf. Mirror of model/runtime.py:health_split. */
+export function healthSplit(label, affectedPct) {
+  if (isHealthy(label)) return { good_pct: 100, bad_pct: 0 }
+  const bad = Math.round(Math.min(100, Math.max(1, affectedPct)) * 10) / 10
+  return { good_pct: Math.round((100 - bad) * 10) / 10, bad_pct: bad }
 }
 
 export function qualityGate(m) {
@@ -301,10 +408,34 @@ function jet(v) {
   return [clamp(1.5 - Math.abs(4 * v - 3)) * 255, clamp(1.5 - Math.abs(4 * v - 2)) * 255, clamp(1.5 - Math.abs(4 * v - 1)) * 255]
 }
 
+
+/** Draw a Grad-CAM map as a translucent heatmap onto an existing 2D context (used by live mode). */
+export function drawHeatmap(ctx, { cam, width, height }, rect, alpha = 0.4) {
+  const small = document.createElement('canvas')
+  small.width = width
+  small.height = height
+  const sctx = small.getContext('2d')
+  const img = sctx.createImageData(width, height)
+  for (let i = 0; i < width * height; i++) {
+    const [r, g, b] = jet(cam[i])
+    img.data[i * 4] = r
+    img.data[i * 4 + 1] = g
+    img.data[i * 4 + 2] = b
+    img.data[i * 4 + 3] = 255 * alpha * Math.min(1, cam[i] * 1.6)
+  }
+  sctx.putImageData(img, 0, 0)
+  ctx.save()
+  ctx.imageSmoothingEnabled = true
+  ctx.imageSmoothingQuality = 'high'
+  ctx.drawImage(small, rect.x, rect.y, rect.w, rect.h)
+  ctx.restore()
+}
+
 function overlayHeatmap(bitmap, { cam, width, height }, alpha = 0.45, maxSide = 512) {
-  const scale = Math.min(1, maxSide / Math.max(bitmap.width, bitmap.height))
-  const w = Math.max(1, Math.round(bitmap.width * scale))
-  const h = Math.max(1, Math.round(bitmap.height * scale))
+  const size = sourceSize(bitmap)
+  const scale = Math.min(1, maxSide / Math.max(size.width, size.height))
+  const w = Math.max(1, Math.round(size.width * scale))
+  const h = Math.max(1, Math.round(size.height * scale))
   const { canvas, ctx } = drawToCanvas(bitmap, w, h)
   const img = ctx.getImageData(0, 0, w, h)
   for (let y = 0; y < h; y++) {
@@ -333,26 +464,7 @@ function overlayHeatmap(bitmap, { cam, width, height }, alpha = 0.45, maxSide = 
 
 /* ---------------- full pipeline ---------------- */
 
-export async function diagnoseOnDevice(fileOrBlob) {
-  await loadModel()
-  const bitmap = await toImageBitmap(fileOrBlob)
-  const { canvas: c224, ctx: ctx224 } = drawToCanvas(bitmap, IMG, IMG)
-  const rgba224 = ctx224.getImageData(0, 0, IMG, IMG).data
-  const { ctx: ctxSmall } = drawToCanvas(c224, ANALYSIS, ANALYSIS)
-  const rgbaSmall = ctxSmall.getImageData(0, 0, ANALYSIS, ANALYSIS).data
-
-  const metrics = analyseImage(rgba224, rgbaSmall)
-  const { reason, warnings } = qualityGate(metrics)
-  if (reason) return { status: 'rejected', reason, warnings, metrics, inference: 'device' }
-
-  const input = new Float32Array(IMG * IMG * 3)
-  for (let i = 0; i < IMG * IMG; i++) {
-    input[i * 3] = rgba224[i * 4 + 2] - MEAN_BGR[0]
-    input[i * 3 + 1] = rgba224[i * 4 + 1] - MEAN_BGR[1]
-    input[i * 3 + 2] = rgba224[i * 4] - MEAN_BGR[2]
-  }
-  const { probs, features, featureDims } = await runModel(input)
-
+export function summarizeProbs(probs, metrics, warnings = []) {
   const order = Array.from(probs.keys()).sort((a, b) => probs[b] - probs[a])
   const idx = order[0]
   const label = meta.labels[idx]
@@ -360,8 +472,8 @@ export async function diagnoseOnDevice(fileOrBlob) {
   const margin = confidence - probs[order[1]]
   const uncertain = confidence < QUALITY.minConfidence || margin < QUALITY.minMargin
   const r4 = x => Math.round(x * 1e4) / 1e4
-
   return {
+    index: idx,
     status: uncertain ? 'uncertain' : 'ok',
     reason: uncertain ? 'low_confidence' : null,
     warnings,
@@ -373,9 +485,59 @@ export async function diagnoseOnDevice(fileOrBlob) {
     is_healthy: isHealthy(label),
     affected_area_pct: isHealthy(label) ? 0 : metrics.affected_area_pct,
     severity: severityFromArea(label, metrics.affected_area_pct),
+    health: healthSplit(label, metrics.affected_area_pct),
     metrics,
     inference: 'device',
     model: { quantization: meta.quantization, version: meta.version },
-    gradcam_image: overlayHeatmap(bitmap, gradcamFromFeatures(features, featureDims, head, idx)),
   }
+}
+
+/**
+ * Live-camera frame: quality gate + model + raw Grad-CAM (no image encoding).
+ * Returns the full probability vector so callers can smooth across frames.
+ */
+export async function analyseFrame(video) {
+  await loadModel()
+  const { source: leaf, rect: cropRect } = cropToLeaf(video, locateLeaf(video))
+  const { canvas: c224, ctx: ctx224 } = modelInputCanvas(leaf)
+  const rgba224 = ctx224.getImageData(0, 0, IMG, IMG).data
+  const { ctx: ctxSmall } = drawToCanvas(c224, ANALYSIS, ANALYSIS)
+  const metrics = analyseImage(rgba224, ctxSmall.getImageData(0, 0, ANALYSIS, ANALYSIS).data)
+  const { reason, warnings } = qualityGate(metrics)
+  if (reason) return { status: 'rejected', reason, warnings, metrics, cropRect }
+
+  const input = new Float32Array(IMG * IMG * 3)
+  for (let i = 0; i < IMG * IMG; i++) {
+    input[i * 3] = rgba224[i * 4 + 2] - MEAN_BGR[0]
+    input[i * 3 + 1] = rgba224[i * 4 + 1] - MEAN_BGR[1]
+    input[i * 3 + 2] = rgba224[i * 4] - MEAN_BGR[2]
+  }
+  const { probs, features, featureDims } = await runModel(input)
+  return { status: 'scored', probs, features, featureDims, metrics, warnings, cropRect }
+}
+
+export const gradcamForClass = (features, featureDims, classIndex) => gradcamFromFeatures(features, featureDims, head, classIndex)
+
+export async function diagnoseOnDevice(fileOrBlob) {
+  await loadModel()
+  const bitmap = await toImageBitmap(fileOrBlob)
+  const { source: leaf, rect: cropRect } = cropToLeaf(bitmap, locateLeaf(bitmap))
+  const { canvas: c224, ctx: ctx224 } = modelInputCanvas(leaf)
+  const rgba224 = ctx224.getImageData(0, 0, IMG, IMG).data
+  const { ctx: ctxSmall } = drawToCanvas(c224, ANALYSIS, ANALYSIS)
+  const rgbaSmall = ctxSmall.getImageData(0, 0, ANALYSIS, ANALYSIS).data
+
+  const metrics = analyseImage(rgba224, rgbaSmall)
+  const { reason, warnings } = qualityGate(metrics)
+  if (reason) return { status: 'rejected', reason, warnings, metrics, crop_box: cropRect, inference: 'device' }
+
+  const input = new Float32Array(IMG * IMG * 3)
+  for (let i = 0; i < IMG * IMG; i++) {
+    input[i * 3] = rgba224[i * 4 + 2] - MEAN_BGR[0]
+    input[i * 3 + 1] = rgba224[i * 4 + 1] - MEAN_BGR[1]
+    input[i * 3 + 2] = rgba224[i * 4] - MEAN_BGR[2]
+  }
+  const { probs, features, featureDims } = await runModel(input)
+  const { index, ...summary } = summarizeProbs(probs, metrics, warnings)
+  return { ...summary, crop_box: cropRect, gradcam_image: overlayHeatmap(leaf, gradcamFromFeatures(features, featureDims, head, index)) }
 }

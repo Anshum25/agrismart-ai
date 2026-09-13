@@ -48,6 +48,9 @@ QUALITY = {
     "blurWarn": 40,
     "minConfidence": 0.60,
     "minMargin": 0.20,
+    "cropPad": 1.0,
+    "cropMaxArea": 0.80,
+    "cropMinArea": 0.02,
 }
 
 # Affected-area (%) cut-offs for severity. Mirrored in the frontend.
@@ -76,6 +79,23 @@ def resize(image: np.ndarray, size: int) -> np.ndarray:
     import cv2
 
     return cv2.resize(image, (size, size), interpolation=cv2.INTER_AREA)
+
+
+TRAIN_SOURCE_SIZE = 256  # PlantVillage images are 256x256
+
+
+def model_input(rgb: np.ndarray) -> np.ndarray:
+    """
+    Resize like training: Keras flow_from_directory loads 256px PlantVillage images and
+    resizes them to 224px with *nearest* interpolation. Large photos are first smoothly
+    downscaled to 256px so nearest sampling does not alias. Mirrored in inference.js.
+    """
+    import cv2
+
+    h, w = rgb.shape[:2]
+    if max(h, w) > TRAIN_SOURCE_SIZE:
+        rgb = cv2.resize(rgb, (TRAIN_SOURCE_SIZE, TRAIN_SOURCE_SIZE), interpolation=cv2.INTER_AREA)
+    return cv2.resize(rgb, (IMG_SIZE, IMG_SIZE), interpolation=cv2.INTER_NEAREST)
 
 
 def preprocess(rgb224: np.ndarray) -> np.ndarray:
@@ -139,6 +159,45 @@ def fill_holes(mask: np.ndarray) -> np.ndarray:
     return ~outside
 
 
+def locate_leaf(rgb: np.ndarray) -> dict[str, float] | None:
+    """
+    Detect the largest leaf: HSV plant mask -> fill holes -> largest 4-connected component
+    (cv2.connectedComponentsWithStats). Returns a normalised box or None.
+    Mirrored in inference.js (locateLeaf).
+    """
+    import cv2
+
+    small = resize(rgb, ANALYSIS_SIZE)
+    plant, _ = plant_masks(small)
+    leaf = fill_holes(plant).astype(np.uint8)
+    count, _, stats, _ = cv2.connectedComponentsWithStats(leaf, connectivity=4)
+    if count <= 1:
+        return None
+    best = 1 + int(np.argmax(stats[1:, cv2.CC_STAT_AREA]))
+    x, y, w, h, area = stats[best]
+    if area < QUALITY["cropMinArea"] * ANALYSIS_SIZE * ANALYSIS_SIZE:
+        return None
+    return {"x": x / ANALYSIS_SIZE, "y": y / ANALYSIS_SIZE, "w": w / ANALYSIS_SIZE, "h": h / ANALYSIS_SIZE}
+
+
+def crop_to_leaf(rgb: np.ndarray, box: dict[str, float] | None) -> tuple[np.ndarray, dict[str, float]]:
+    """Padded square crop around the detected leaf, so background does not confuse the classifier."""
+    full = {"x": 0.0, "y": 0.0, "w": 1.0, "h": 1.0}
+    if box is None:
+        return rgb, full
+    height, width = rgb.shape[:2]
+    bw, bh = box["w"] * width, box["h"] * height
+    if bw * bh > QUALITY["cropMaxArea"] * width * height:
+        return rgb, full
+    side = min(max(bw, bh) * QUALITY["cropPad"], width, height)
+    cx, cy = (box["x"] + box["w"] / 2) * width, (box["y"] + box["h"] / 2) * height
+    x0 = int(round(min(max(cx - side / 2, 0), width - side)))
+    y0 = int(round(min(max(cy - side / 2, 0), height - side)))
+    side_px = int(round(side))
+    crop = rgb[y0:y0 + side_px, x0:x0 + side_px]
+    return crop, {"x": x0 / width, "y": y0 / height, "w": side_px / width, "h": side_px / height}
+
+
 def laplacian_variance(gray: np.ndarray) -> float:
     g = gray.astype(np.float32)
     lap = -4.0 * g[1:-1, 1:-1] + g[:-2, 1:-1] + g[2:, 1:-1] + g[1:-1, :-2] + g[1:-1, 2:]
@@ -181,6 +240,18 @@ def quality_gate(metrics: dict[str, Any]) -> tuple[str | None, list[str]]:
     if metrics["sharpness"] < QUALITY["blurWarn"]:
         warnings.append("slightly_blurry")
     return None, warnings
+
+
+def health_split(label: str, affected_pct: float) -> dict[str, float]:
+    """
+    Good vs bad share of the leaf. A leaf classified healthy is 100% good; otherwise
+    the estimated affected tissue is "bad" (at least 1%, since disease was detected).
+    Mirrored in frontend/src/lib/inference.js (healthSplit).
+    """
+    if is_healthy(label):
+        return {"good_pct": 100.0, "bad_pct": 0.0}
+    bad = round(min(100.0, max(1.0, float(affected_pct))), 1)
+    return {"good_pct": round(100.0 - bad, 1), "bad_pct": bad}
 
 
 def severity_from_area(label: str, affected_pct: float) -> str:
@@ -334,13 +405,14 @@ class Engine:
         return np.asarray(probs)[0].astype(np.float64), np.asarray(features)[0].astype(np.float32)
 
     def diagnose(self, image: np.ndarray, with_gradcam: bool = True) -> dict[str, Any]:
-        rgb = to_rgb_uint8(image)
-        rgb224 = resize(rgb, IMG_SIZE)
+        full = to_rgb_uint8(image)
+        rgb, crop_box = crop_to_leaf(full, locate_leaf(full))
+        rgb224 = model_input(rgb)
         metrics = analyse_image(rgb224)
         reason, warnings = quality_gate(metrics)
         if reason:
             return {"status": "rejected", "reason": reason, "warnings": warnings,
-                    "metrics": metrics, "inference": "server"}
+                    "metrics": metrics, "crop_box": crop_box, "inference": "server"}
 
         probs, features = self.infer(rgb224)
         order = np.argsort(probs)[::-1]
@@ -370,7 +442,9 @@ class Engine:
             "is_healthy": is_healthy(label),
             "affected_area_pct": 0.0 if is_healthy(label) else metrics["affected_area_pct"],
             "severity": severity_from_area(label, metrics["affected_area_pct"]),
+            "health": health_split(label, metrics["affected_area_pct"]),
             "metrics": metrics,
+            "crop_box": crop_box,
             "inference": "server",
             "model": {"quantization": self.meta.get("quantization"), "version": self.meta.get("version")},
         }

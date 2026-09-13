@@ -10,7 +10,6 @@
   "status.offline": "Offline",
   "common.retry": "Try again",
   "common.close": "Close",
-
   "diag.badge": "Crop Doctor",
   "diag.title": "Check your plant's health",
   "diag.subtitle": "Take or upload a clear photo of one leaf. The diagnosis runs on your phone and works even without internet.",
@@ -40,7 +39,6 @@
   "diag.change": "Change photo",
   "diag.failed": "Analysis failed",
   "diag.notDeployed": "The diagnosis model has not been deployed yet.",
-
   "reject.title": "We couldn't read this photo",
   "reject.not_leaf": "This doesn't look like a plant leaf.",
   "reject.too_dark": "The photo is too dark.",
@@ -49,7 +47,6 @@
   "reject.tip1": "Photograph one leaf at a time, filling most of the frame.",
   "reject.tip2": "Use daylight, avoid harsh shadows and direct flash.",
   "reject.tip3": "Hold the phone steady and tap the screen to focus.",
-
   "result.detectedOn": "Detected on {crop}",
   "result.confidence": "Confidence",
   "result.uncertain": "The model is not sure. Compare the top matches below and retake the photo for a better result.",
@@ -65,7 +62,6 @@
   "severity.mild": "Mild",
   "severity.moderate": "Moderate",
   "severity.severe": "Severe",
-
   "advice.title": "Treatment advice",
   "advice.loading": "Preparing advice in your language…",
   "advice.immediate": "Do this now",
@@ -80,7 +76,6 @@
   "advice.listen": "Listen",
   "advice.stop": "Stop",
   "advice.noVoice": "No voice for this language is installed on this device. Please read the text.",
-
   "voice.title": "Ask the AI agronomist",
   "voice.hint": "Tap the mic and ask in your language, e.g. \"How much should I spray per acre?\"",
   "voice.record": "Speak",
@@ -92,7 +87,6 @@
   "voice.assistant": "AgriSmart",
   "voice.offline": "The voice assistant needs internet.",
   "voice.micDenied": "Microphone permission denied.",
-
   "insights.title": "Farm insights",
   "insights.weatherRisk": "Disease risk now",
   "insights.irrigation": "Irrigation",
@@ -101,7 +95,6 @@
   "insights.sustainability": "Sustainability grade",
   "insights.defaultLocation": "Using a default location. Turn on location for local weather.",
   "insights.unavailable": "Insights need an internet connection.",
-
   "forecast.title": "7-day disease risk",
   "forecast.spray": "Best day to spray: {day}",
   "forecast.noSpray": "No dry, calm day this week — avoid spraying before rain.",
@@ -110,7 +103,6 @@
   "risk.low": "Low",
   "risk.moderate": "Moderate",
   "risk.high": "High",
-
   "share.title": "Help warn nearby farmers",
   "share.hint": "Share this result anonymously on the outbreak map. Only the crop, disease and an approximate area (~5 km) are stored.",
   "share.button": "Share anonymously",
@@ -118,7 +110,6 @@
   "share.queued": "Saved — it will be shared when you are back online.",
   "share.needLocation": "Turn on location to share.",
   "share.lowConfidence": "Only confident results can be shared.",
-
   "map.badge": "Community early warning",
   "map.title": "Crop disease outbreak map",
   "map.subtitle": "Anonymous diagnoses shared by farmers, grouped into ~5 km areas.",
@@ -137,5 +128,28 @@
   "map.noAlerts": "No disease reports near you in the last 7 days.",
   "map.nearest": "nearest {km} km away",
   "map.loading": "Loading map data…",
-  "map.error": "Could not load outbreak data."
+  "map.error": "Could not load outbreak data.",
+  "diag.tab.live": "Live",
+  "live.starting": "Starting camera…",
+  "live.scanning": "Live scan",
+  "live.paused": "Paused",
+  "live.speed": "{ms} ms / scan",
+  "live.pause": "Pause",
+  "live.resume": "Resume",
+  "live.showFocus": "AI focus",
+  "live.fullReport": "Full report & advice",
+  "live.notSure": "not sure — hold steady",
+  "live.hint": "Hold one leaf in front of the camera. Results update automatically — no photo needed.",
+  "live.reject.not_leaf": "Looking for a leaf… point the camera at one leaf",
+  "live.reject.too_dark": "Too dark — move to better light",
+  "live.reject.overexposed": "Too bright — avoid direct sun glare",
+  "live.reject.blurry": "Hold steady — the image is blurry",
+  "live.cameraDenied": "Camera permission denied. Allow camera access to use live scan.",
+  "live.cameraError": "Could not start the camera on this device.",
+  "live.modelNeeded": "Live scan needs the offline model, which is not available on this deployment.",
+  "health.allGood": "100% healthy — looks good",
+  "health.allGoodShort": "100% healthy",
+  "health.needsCare": "Disease detected — needs care",
+  "health.good": "Good",
+  "health.bad": "Bad"
 }

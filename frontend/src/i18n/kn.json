@@ -64,5 +64,12 @@
   "share.done": "ಹಂಚಿಕೊಳ್ಳಲಾಗಿದೆ. ಧನ್ಯವಾದಗಳು!",
   "map.title": "ಬೆಳೆ ರೋಗ ಹರಡುವಿಕೆ ನಕ್ಷೆ",
   "map.alertsTitle": "ನಿಮ್ಮ ಹತ್ತಿರದ ಎಚ್ಚರಿಕೆಗಳು",
-  "map.findAlerts": "ನನ್ನ ಪ್ರದೇಶ ಪರಿಶೀಲಿಸಿ"
+  "map.findAlerts": "ನನ್ನ ಪ್ರದೇಶ ಪರಿಶೀಲಿಸಿ",
+  "diag.tab.live": "ಲೈವ್",
+  "live.fullReport": "ಪೂರ್ಣ ವರದಿ",
+  "health.allGood": "100% ಆರೋಗ್ಯಕರ — ಚೆನ್ನಾಗಿದೆ",
+  "health.allGoodShort": "100% ಆರೋಗ್ಯಕರ",
+  "health.needsCare": "ರೋಗ ಪತ್ತೆಯಾಗಿದೆ — ಆರೈಕೆ ಬೇಕು",
+  "health.good": "ಉತ್ತಮ",
+  "health.bad": "ಕೆಟ್ಟ"
 }

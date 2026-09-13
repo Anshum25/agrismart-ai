@@ -91,6 +91,12 @@ def test_affected_area_and_severity():
     assert runtime.severity_from_area("Tomato___Early_blight", 30) == "severe"
 
 
+def test_health_split():
+    assert runtime.health_split("Apple___healthy", 12.0) == {"good_pct": 100.0, "bad_pct": 0.0}
+    assert runtime.health_split("Tomato___Early_blight", 18.24) == {"good_pct": 81.8, "bad_pct": 18.2}
+    assert runtime.health_split("Tomato___Early_blight", 0.0) == {"good_pct": 99.0, "bad_pct": 1.0}
+
+
 def _js_object(name: str) -> dict:
     src = (ROOT / "frontend" / "src" / "lib" / "inference.js").read_text(encoding="utf-8")
     match = re.search(rf"export const {name} = (\{{.*?\}})", src, re.S)
@@ -101,3 +107,16 @@ def _js_object(name: str) -> dict:
 def test_thresholds_in_sync_with_browser_implementation():
     assert _js_object("QUALITY") == runtime.QUALITY
     assert _js_object("SEVERITY") == runtime.SEVERITY
+
+
+def test_leaf_detection_crops_framed_leaf():
+    leaf = leaf_image(300)
+    frame = np.full((480, 640, 3), 110, dtype=np.uint8)
+    frame[120:420, 250:550] = leaf
+    box = runtime.locate_leaf(frame)
+    assert box is not None
+    crop, rect = runtime.crop_to_leaf(frame, box)
+    assert rect["w"] < 0.7 and crop.shape[0] == crop.shape[1]
+    # A photo that is already mostly leaf is left alone
+    _, full = runtime.crop_to_leaf(leaf, runtime.locate_leaf(leaf))
+    assert full == {"x": 0.0, "y": 0.0, "w": 1.0, "h": 1.0} or full["w"] > 0.5

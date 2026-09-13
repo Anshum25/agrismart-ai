@@ -2,7 +2,7 @@
 AgriSmart AI — GenAI farmer assistant.
 
 Generates structured, plain-language treatment advice for a predicted disease in
-the farmer's language using Groq (Llama 3.3 70B). Falls back, in order, to:
+the farmer's language using Groq (GPT-OSS 120B by default, GROQ_CHAT_MODEL to override). Falls back, in order, to:
   1. the pre-generated offline pack  frontend/public/offline/advice_<lang>.json
   2. the curated English knowledge base  bonus/disease_kb.json
 so the app always returns real, disease-specific advice.
@@ -24,9 +24,14 @@ from model.labels import split_label
 ROOT = Path(__file__).resolve().parent.parent
 load_dotenv(ROOT / ".env")
 
-MODEL_ID = os.getenv("GROQ_CHAT_MODEL", "llama-3.3-70b-versatile")
+MODEL_ID = os.getenv("GROQ_CHAT_MODEL", "openai/gpt-oss-120b")
 KB_PATH = Path(__file__).resolve().parent / "disease_kb.json"
 OFFLINE_DIR = ROOT / "frontend" / "public" / "offline"
+
+
+def chat_options() -> dict[str, Any]:
+    """Extra parameters for reasoning models (their thinking tokens count toward max_tokens)."""
+    return {"reasoning_effort": "low"} if "gpt-oss" in MODEL_ID else {}
 
 LIST_KEYS = ("immediate_steps", "prevention", "organic_options", "chemical_options")
 TEXT_KEYS = ("summary", "irrigation_tip", "weather_watch")
@@ -126,7 +131,8 @@ def llm_advice(disease_class: str, lang: str, client=None) -> dict[str, Any] | N
             model=MODEL_ID,
             messages=[{"role": "user", "content": build_prompt(disease_class, lang)}],
             temperature=0.3,
-            max_tokens=900,
+            max_tokens=2500,
+            **chat_options(),
             response_format={"type": "json_object"},
         )
         parsed = json.loads(completion.choices[0].message.content or "{}")
