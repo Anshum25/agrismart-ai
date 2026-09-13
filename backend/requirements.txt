@@ -1,9 +1,12 @@
-fastapi>=0.111.0
+# Runtime API dependencies (no TensorFlow: inference uses ONNX Runtime).
+fastapi>=0.115.0
 uvicorn[standard]>=0.29.0
 python-multipart>=0.0.9
 pillow>=10.0.0
 numpy>=1.24.0
-python-dotenv>=1.0.0
-groq>=0.9.0
-tensorflow-cpu>=2.15,<2.18
 opencv-python-headless>=4.8
+onnxruntime>=1.17
+requests>=2.31
+python-dotenv>=1.0.0
+groq>=0.11.0
+slowapi>=0.1.9

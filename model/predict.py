@@ -25,6 +25,7 @@ from PIL import Image
 from tensorflow.keras.applications.resnet50 import preprocess_input
 
 from model.config import CLASS_LABELS_PATH, DEFAULT_CLASS_LABELS, DEFAULT_MODEL_PATH, IMG_SIZE
+from model.labels import extract_crop_type, format_label  # noqa: F401  (re-exported)
 
 _model: tf.keras.Model | None = None
 _labels: list[str] | None = None
@@ -118,22 +119,6 @@ def predict(
 
     image = Image.open(path).convert("RGB")
     return predict_from_array(np.asarray(image), model_path=model_path)
-
-
-def format_label(label: str) -> str:
-    """Human-readable label: 'Tomato___Early_blight' -> 'Tomato — Early blight'."""
-    parts = label.split("___", 1)
-    if len(parts) == 2:
-        crop, disease = parts
-        crop = crop.replace("_", " ")
-        disease = disease.replace("_", " ")
-        return f"{crop} — {disease}"
-    return label.replace("_", " ")
-
-
-def extract_crop_type(label: str) -> str:
-    """Return crop/plant name from a PlantVillage class label."""
-    return label.split("___")[0].replace("_", " ")
 
 
 if __name__ == "__main__":

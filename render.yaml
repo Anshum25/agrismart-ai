@@ -1,0 +1,25 @@
+# Render Blueprint for the AgriSmart AI API.
+# The frontend is deployed separately on Vercel (see frontend/vercel.json).
+services:
+  - type: web
+    name: agrismart-api
+    runtime: python
+    plan: free
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: uvicorn backend.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: GROQ_API_KEY
+        sync: false
+      - key: FRONTEND_ORIGINS
+        sync: false
+      - key: MODEL_URL
+        sync: false
+      - key: MODEL_SHA256
+        sync: false
+      - key: DB_PATH
+        value: backend/data/agrismart.db
+      - key: SEED_DEMO_DATA
+        value: "1"
