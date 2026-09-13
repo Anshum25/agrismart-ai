@@ -1,5 +1,7 @@
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { api, API_DOCS_URL } from '../lib/api'
 import {
   Brain, Layers, Code2, Zap, Leaf, Target, Users, BookOpen,
   CheckCircle, ExternalLink
@@ -22,27 +24,26 @@ const TECH_STACK = [
   { name: 'ResNet50', role: 'CNN backbone (ImageNet pretrained)', icon: <Layers size={18} />, color: 'feat-icon-green' },
   { name: 'FastAPI + Uvicorn', role: 'High-performance Python API server', icon: <Zap size={18} />, color: 'feat-icon-green' },
   { name: 'React + Vite', role: 'Modern frontend framework', icon: <Code2 size={18} />, color: 'feat-icon-blue' },
-  { name: 'Groq Llama 3', role: 'AI agronomist advice generation', icon: <Brain size={18} />, color: 'feat-icon-amber' },
-  { name: 'OpenCV + Grad-CAM', role: 'Explainability heatmap generation', icon: <Target size={18} />, color: 'feat-icon-red' },
+  { name: 'Groq GPT-OSS 120B + Whisper', role: 'Vernacular advice and voice assistant', icon: <Brain size={18} />, color: 'feat-icon-amber' },
+  { name: 'ONNX Runtime + Grad-CAM', role: 'On-device inference and explainability', icon: <Target size={18} />, color: 'feat-icon-red' },
 ]
 
 const ARCH_POINTS = [
   'Transfer learning from ImageNet — leverages visual feature representations learned from millions of images.',
-  'Two-phase fine-tuning: Phase 1 freezes the ResNet50 backbone and trains only the classification head. Phase 2 unfreezes the last 30 layers for domain-specific feature refinement.',
+  'The deployed checkpoint is Phase 1: the ResNet50 backbone is frozen and only the classification head is trained (88.6% accuracy verified on 1,500 PlantVillage images). Phase 2, unfreezing the last 30 layers, is supported by the training script and is the next accuracy improvement.',
   'Stratified 70/15/15 train/val/test split ensures representative class distribution across all splits.',
-  'Augmentation pipeline: horizontal/vertical flips, random rotation (±30°), zoom, brightness/contrast shifts.',
-  'Callbacks: EarlyStopping (patience=5), ReduceLROnPlateau (factor=0.3), ModelCheckpoint for best weights.',
+  'Augmentation pipeline: horizontal/vertical flips, random rotation (±25°), shifts, shear, zoom (15%) and brightness (0.8–1.2).',
+  'Callbacks: EarlyStopping (patience=5), ReduceLROnPlateau (factor=0.5, patience=2), ModelCheckpoint for best weights.',
+  'Export: the Keras model is converted to an ONNX model with two outputs (features + probabilities), verified against Keras for accuracy and Grad-CAM parity, and runs both in the browser and on the API.',
 ]
 
 export default function About() {
   const [health, setHealth] = useState(null)
 
+  const [healthError, setHealthError] = useState(false)
+
   useEffect(() => {
-    const baseUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace(/\/+$/, '') : '/api'
-    fetch(`${baseUrl}/health`)
-      .then(r => r.json())
-      .then(setHealth)
-      .catch(() => {})
+    api.health().then(setHealth).catch(() => setHealthError(true))
   }, [])
 
   return (
@@ -72,12 +73,16 @@ export default function About() {
         <div className="container">
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
             {health?.model_loaded
-              ? <><CheckCircle size={16} color="var(--forest-light)" /> <span style={{ fontWeight: 600, fontSize: '.9rem', color: 'var(--forest)' }}>Backend Online — ResNet50 weights loaded</span></>
-              : <><Zap size={16} color="var(--amber)" /> <span style={{ fontWeight: 600, fontSize: '.9rem', color: 'var(--amber)' }}>{health ? 'Backend online — running in Demo Mode' : 'Connecting to backend…'}</span></>
+              ? <><CheckCircle size={16} color="var(--forest-light)" /> <span style={{ fontWeight: 600, fontSize: '.9rem', color: 'var(--forest)' }}>API online — ResNet50 ONNX model loaded ({health.quantization})</span></>
+              : <><Zap size={16} color="var(--amber)" /> <span style={{ fontWeight: 600, fontSize: '.9rem', color: 'var(--amber)' }}>
+                  {health ? 'API online — server model not loaded (diagnosis runs on-device when available)'
+                    : healthError ? 'API unreachable — offline features still work' : 'Connecting to API… (free servers can take up to a minute to wake)'}
+                </span></>
             }
             {health && (
               <span style={{ marginLeft: 'auto', fontSize: '.8rem', color: 'var(--text-muted)' }}>
-                Model classes: {health.classes} · <a href="http://localhost:8000/docs" target="_blank" rel="noreferrer" style={{ color: 'var(--forest-light)', textDecoration: 'none' }}>API Docs <ExternalLink size={11} /></a>
+                {health.classes ? `Model classes: ${health.classes} · ` : ''}AI advice: {health.ai_advice_enabled ? 'on' : 'offline guide'}
+                {API_DOCS_URL && <> · <a href={API_DOCS_URL} target="_blank" rel="noreferrer" style={{ color: 'var(--forest-light)', textDecoration: 'none' }}>API Docs <ExternalLink size={11} /></a></>}
               </span>
             )}
           </div>
@@ -108,12 +113,12 @@ export default function About() {
             </FadeUp>
 
             <FadeUp delay={.1}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+              <div className="stat-grid-2">
                 {[
                   { num: '40%', desc: 'of global food production lost to disease & pests annually' },
                   { num: '$220B', desc: 'annual economic cost of crop disease worldwide' },
                   { num: '38', desc: 'disease classes detected by AgriSmart AI' },
-                  { num: '98.96%', desc: 'test accuracy on PlantVillage held-out split' },
+                  { num: '88.6%', desc: 'verified accuracy of the deployed model (PlantVillage)' },
                 ].map(s => (
                   <div key={s.num} className="metric-card">
                     <div className="metric-value">{s.num}</div>
@@ -134,7 +139,7 @@ export default function About() {
             <h2 className="section-title">How the Model Was Built</h2>
           </FadeUp>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 40, alignItems: 'start' }}>
+          <div className="approach-grid">
             <FadeUp>
               <h3 style={{ marginBottom: 20 }}>Training Pipeline</h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
@@ -191,7 +196,7 @@ export default function About() {
             <h2 className="section-title">Built with Industry-Grade Tools</h2>
           </FadeUp>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+          <div className="grid-3">
             {TECH_STACK.map((t, i) => (
               <FadeUp key={t.name} delay={i * .06}>
                 <div className="tech-item">
@@ -225,9 +230,9 @@ export default function About() {
               <a href="https://github.com/Anshum25/agrismart-ai" target="_blank" rel="noreferrer" className="btn btn-amber">
                 View on GitHub <ExternalLink size={15} />
               </a>
-              <a href="/diagnose" className="btn btn-outline" style={{ borderColor: 'rgba(255,255,255,.3)', color: 'white' }}>
+              <Link to="/diagnose" className="btn btn-outline" style={{ borderColor: 'rgba(255,255,255,.3)', color: 'white' }}>
                 Try the Demo
-              </a>
+              </Link>
             </div>
           </FadeUp>
         </div>

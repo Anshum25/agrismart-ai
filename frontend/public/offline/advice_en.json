@@ -1,0 +1,884 @@
+{
+ "lang": "en",
+ "source": "knowledge_base",
+ "generated_at": "2026-09-13T08:56:42+00:00",
+ "advice": {
+  "Apple___Apple_scab": {
+   "pathogen": "Fungus (Venturia inaequalis)",
+   "summary": "Apple scab causes olive-green to black velvety spots on leaves and fruit. It spreads in cool, wet spring weather and can cause early leaf fall and cracked, unmarketable fruit.",
+   "immediate_steps": [
+    "Remove and destroy badly spotted leaves and fruit.",
+    "Rake and destroy fallen leaves under the tree so spores do not survive.",
+    "Start a protective spray round before the next rain."
+   ],
+   "prevention": [
+    "Prune to open the canopy so leaves dry quickly.",
+    "Spray at green-tip and petal-fall stages in scab-prone areas.",
+    "Prefer scab-tolerant varieties for new planting."
+   ],
+   "organic_options": [
+    "Wettable sulphur 80 WP @ 2 g/L before rain periods.",
+    "Copper oxychloride 50 WP @ 3 g/L at bud break (not during bloom)."
+   ],
+   "chemical_options": [
+    "Captan 50 WP @ 2.5 g/L or mancozeb 75 WP @ 2.5 g/L as protectants.",
+    "Difenoconazole 25 EC @ 0.3 ml/L or hexaconazole 5 EC @ 1 ml/L after infection periods."
+   ],
+   "irrigation_tip": "Use basin or drip irrigation; avoid sprinklers that wet the foliage.",
+   "weather_watch": "High risk when leaves stay wet for 9+ hours at 15-24 °C, especially during spring rains."
+  },
+  "Apple___Black_rot": {
+   "pathogen": "Fungus (Botryosphaeria obtusa)",
+   "summary": "Black rot produces purple-bordered 'frog-eye' leaf spots, sunken cankers on branches and rotting, mummified fruit. The fungus survives in dead wood and old fruit.",
+   "immediate_steps": [
+    "Cut out cankered branches 15 cm below visible damage and burn them.",
+    "Remove mummified fruit from the tree and ground.",
+    "Disinfect pruning tools between cuts."
+   ],
+   "prevention": [
+    "Keep trees vigorous with balanced nutrition; stressed trees are more susceptible.",
+    "Remove dead wood every dormant season.",
+    "Protect large pruning wounds with a copper or Bordeaux paste."
+   ],
+   "organic_options": [
+    "Bordeaux mixture 1% at dormant stage.",
+    "Copper oxychloride 50 WP @ 3 g/L after pruning."
+   ],
+   "chemical_options": [
+    "Captan 50 WP @ 2.5 g/L from petal fall at 10-14 day intervals.",
+    "Thiophanate-methyl 70 WP @ 1 g/L where approved."
+   ],
+   "irrigation_tip": "Water deeply at the root zone during dry spells to avoid drought stress.",
+   "weather_watch": "Warm (20-30 °C), humid and rainy periods during fruit development favour infection."
+  },
+  "Apple___Cedar_apple_rust": {
+   "pathogen": "Fungus (Gymnosporangium juniperi-virginianae)",
+   "summary": "Cedar apple rust forms bright yellow-orange spots on leaves and fruit. The fungus needs juniper/cedar trees nearby to complete its life cycle.",
+   "immediate_steps": [
+    "Remove heavily infected leaves where practical.",
+    "Look for and remove galls on nearby juniper or cedar trees.",
+    "Apply a protective fungicide before the next wet period."
+   ],
+   "prevention": [
+    "Avoid planting junipers within a few hundred metres of apple orchards.",
+    "Plant rust-resistant apple varieties.",
+    "Spray from pink bud through petal fall in rust-prone years."
+   ],
+   "organic_options": [
+    "Wettable sulphur 80 WP @ 2 g/L as a protectant."
+   ],
+   "chemical_options": [
+    "Mancozeb 75 WP @ 2.5 g/L as a protectant.",
+    "Myclobutanil 10 WP @ 0.5 g/L or hexaconazole 5 EC @ 1 ml/L."
+   ],
+   "irrigation_tip": "Irrigate at soil level in the morning so foliage stays dry.",
+   "weather_watch": "Spring rains with 13-24 °C temperatures release spores from juniper galls."
+  },
+  "Apple___healthy": {
+   "pathogen": "None detected",
+   "summary": "The apple leaf looks healthy. Keep up regular orchard care and scout weekly, especially before and after rains.",
+   "immediate_steps": [
+    "No treatment needed.",
+    "Continue weekly scouting of leaves and young fruit.",
+    "Keep the orchard floor clean of fallen leaves."
+   ],
+   "prevention": [
+    "Prune annually for good light and airflow.",
+    "Apply balanced NPK and farmyard manure based on a soil test.",
+    "Use protective sprays only when local disease forecasts warn of scab or rust."
+   ],
+   "organic_options": [
+    "Mulch the basin with organic matter to conserve moisture.",
+    "Neem cake in the basin to support soil health."
+   ],
+   "chemical_options": [
+    "No chemical treatment required while plants are healthy."
+   ],
+   "irrigation_tip": "Irrigate at 7-10 day intervals in dry weather using basin or drip; avoid waterlogging.",
+   "weather_watch": "Watch for prolonged leaf wetness in spring, which raises scab risk."
+  },
+  "Blueberry___healthy": {
+   "pathogen": "None detected",
+   "summary": "The blueberry leaf looks healthy. Blueberries need acidic, well-drained soil and steady moisture.",
+   "immediate_steps": [
+    "No treatment needed.",
+    "Scout weekly for leaf spots and pests.",
+    "Remove weak or dead canes."
+   ],
+   "prevention": [
+    "Keep soil pH between 4.5 and 5.5.",
+    "Mulch with pine needles or sawdust.",
+    "Prune old canes in winter to keep bushes open."
+   ],
+   "organic_options": [
+    "Organic mulch and compost to maintain soil acidity and moisture."
+   ],
+   "chemical_options": [
+    "No chemical treatment required while plants are healthy."
+   ],
+   "irrigation_tip": "Keep soil evenly moist with drip irrigation; blueberry roots are shallow.",
+   "weather_watch": "Hot, dry spells stress plants; warm humid weather raises fungal leaf spot risk."
+  },
+  "Cherry_(including_sour)___Powdery_mildew": {
+   "pathogen": "Fungus (Podosphaera clandestina)",
+   "summary": "Powdery mildew forms white powdery patches on young leaves and shoots, causing curling and reduced growth. Unlike most fungi it thrives in warm, dry days with humid nights.",
+   "immediate_steps": [
+    "Prune out heavily infected shoot tips.",
+    "Start sulphur sprays at the first white patches.",
+    "Avoid excess nitrogen that produces soft, susceptible growth."
+   ],
+   "prevention": [
+    "Prune for an open canopy and good airflow.",
+    "Remove suckers and water sprouts, which get infected first.",
+    "Spray protectively in orchards with a history of mildew."
+   ],
+   "organic_options": [
+    "Wettable sulphur 80 WP @ 2 g/L (do not spray above 32 °C).",
+    "Potassium bicarbonate @ 5 g/L or neem oil 1500 ppm @ 3 ml/L."
+   ],
+   "chemical_options": [
+    "Hexaconazole 5 EC @ 1 ml/L.",
+    "Myclobutanil 10 WP @ 0.5 g/L; rotate with a different fungicide group."
+   ],
+   "irrigation_tip": "Maintain regular soil moisture; drought-stressed trees suffer more.",
+   "weather_watch": "Risk is highest at 20-30 °C with high night-time humidity and dry leaves by day."
+  },
+  "Cherry_(including_sour)___healthy": {
+   "pathogen": "None detected",
+   "summary": "The cherry leaf looks healthy. Continue routine orchard care and watch for mildew on new shoots.",
+   "immediate_steps": [
+    "No treatment needed.",
+    "Scout new shoots weekly for white powdery patches.",
+    "Keep the orchard floor clean."
+   ],
+   "prevention": [
+    "Prune for airflow after harvest.",
+    "Use balanced fertilization based on soil testing.",
+    "Avoid wounding bark, which invites cankers."
+   ],
+   "organic_options": [
+    "Compost and mulch in the tree basin."
+   ],
+   "chemical_options": [
+    "No chemical treatment required while plants are healthy."
+   ],
+   "irrigation_tip": "Irrigate deeply at the root zone; avoid wetting leaves.",
+   "weather_watch": "Warm days with humid nights can trigger powdery mildew."
+  },
+  "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot": {
+   "pathogen": "Fungus (Cercospora zeae-maydis)",
+   "summary": "Gray leaf spot causes long, narrow, rectangular grey-tan lesions between leaf veins. Severe infection before tasselling can sharply reduce grain filling.",
+   "immediate_steps": [
+    "Check lower leaves across the field to judge how far it has spread.",
+    "If lesions reach the ear leaf before or at tasselling, apply a fungicide.",
+    "Avoid moving through wet fields, which spreads spores."
+   ],
+   "prevention": [
+    "Rotate with a non-cereal crop for at least one season.",
+    "Bury or remove infected crop residue after harvest.",
+    "Grow tolerant hybrids and avoid very dense planting."
+   ],
+   "organic_options": [
+    "Crop rotation with pulses and deep ploughing of residue.",
+    "Trichoderma-enriched compost for soil health."
+   ],
+   "chemical_options": [
+    "Azoxystrobin 18.2% + difenoconazole 11.4% SC @ 1 ml/L.",
+    "Propiconazole 25 EC @ 1 ml/L or mancozeb 75 WP @ 2.5 g/L."
+   ],
+   "irrigation_tip": "Use furrow or drip irrigation; avoid sprinkler irrigation in the evening.",
+   "weather_watch": "Warm (22-30 °C), very humid weather with heavy dew or fog for several days raises risk."
+  },
+  "Corn_(maize)___Common_rust_": {
+   "pathogen": "Fungus (Puccinia sorghi)",
+   "summary": "Common rust produces small, cinnamon-brown powdery pustules on both leaf surfaces. Heavy infection reduces photosynthesis and yield, especially in susceptible hybrids.",
+   "immediate_steps": [
+    "Scout the upper leaves; spray only if pustules are increasing before tasselling.",
+    "Remove volunteer maize plants that carry the rust.",
+    "Apply a fungicide at early spread in susceptible hybrids."
+   ],
+   "prevention": [
+    "Choose rust-resistant hybrids.",
+    "Sow at the recommended time to avoid cool, humid periods at the susceptible stage.",
+    "Maintain balanced nitrogen and potash."
+   ],
+   "organic_options": [
+    "Resistant varieties and timely sowing are the main organic tools."
+   ],
+   "chemical_options": [
+    "Mancozeb 75 WP @ 2.5 g/L at first appearance.",
+    "Propiconazole 25 EC @ 1 ml/L or tebuconazole 25.9 EC @ 1 ml/L."
+   ],
+   "irrigation_tip": "Irrigate in the morning at soil level so foliage dries quickly.",
+   "weather_watch": "Cool to moderate temperatures (16-25 °C) with high humidity and dew favour rust."
+  },
+  "Corn_(maize)___Northern_Leaf_Blight": {
+   "pathogen": "Fungus (Exserohilum turcicum)",
+   "summary": "Northern leaf blight causes long, cigar-shaped grey-green to tan lesions (2.5-15 cm). Infection before silking can cause large yield losses.",
+   "immediate_steps": [
+    "Inspect leaves above the ear; spray if lesions appear before silking.",
+    "Remove severely infected lower leaves in small plots.",
+    "Do not leave infected residue on the field surface."
+   ],
+   "prevention": [
+    "Grow resistant hybrids.",
+    "Rotate crops and plough in residue.",
+    "Avoid late sowing into humid seasons."
+   ],
+   "organic_options": [
+    "Crop rotation, residue management and Trichoderma seed treatment @ 4 g/kg."
+   ],
+   "chemical_options": [
+    "Mancozeb 75 WP @ 2.5 g/L at first symptoms.",
+    "Azoxystrobin 23 SC @ 1 ml/L or propiconazole 25 EC @ 1 ml/L."
+   ],
+   "irrigation_tip": "Avoid overhead irrigation; keep fields well drained.",
+   "weather_watch": "Moderate temperatures (18-27 °C) with long dew periods or rain drive rapid spread."
+  },
+  "Corn_(maize)___healthy": {
+   "pathogen": "None detected",
+   "summary": "The maize leaf looks healthy. Keep scouting, especially from knee-high stage to tasselling.",
+   "immediate_steps": [
+    "No treatment needed.",
+    "Scout 20 plants across the field weekly.",
+    "Watch for fall armyworm feeding in the whorl."
+   ],
+   "prevention": [
+    "Rotate with pulses or oilseeds.",
+    "Apply nitrogen in split doses.",
+    "Keep the field weed-free in the first 45 days."
+   ],
+   "organic_options": [
+    "Farmyard manure or vermicompost before sowing.",
+    "Intercropping with pulses to improve soil health."
+   ],
+   "chemical_options": [
+    "No chemical treatment required while plants are healthy."
+   ],
+   "irrigation_tip": "Critical irrigation stages are knee-high, tasselling, silking and grain filling.",
+   "weather_watch": "Humid spells with heavy dew raise leaf blight and rust risk."
+  },
+  "Grape___Black_rot": {
+   "pathogen": "Fungus (Guignardia bidwellii)",
+   "summary": "Black rot causes tan leaf spots with dark borders and turns berries into hard, black, shrivelled mummies. Mummies left in the vineyard start next season's infection.",
+   "immediate_steps": [
+    "Remove infected leaves and all mummified berries from vines and the ground.",
+    "Apply a protective fungicide before the next rain.",
+    "Improve airflow by removing excess shoots."
+   ],
+   "prevention": [
+    "Remove mummies and infected canes during winter pruning.",
+    "Train vines for an open canopy.",
+    "Spray protectively from new shoot growth until berries begin to colour."
+   ],
+   "organic_options": [
+    "Bordeaux mixture 1% or copper hydroxide 77 WP @ 2 g/L."
+   ],
+   "chemical_options": [
+    "Mancozeb 75 WP @ 2 g/L as a protectant.",
+    "Myclobutanil 10 WP @ 0.4 g/L or tebuconazole 25.9 EC @ 1 ml/L."
+   ],
+   "irrigation_tip": "Use drip irrigation and avoid wetting the canopy.",
+   "weather_watch": "Warm (20-30 °C) rainy weather with 6+ hours of leaf wetness is high risk."
+  },
+  "Grape___Esca_(Black_Measles)": {
+   "pathogen": "Fungal trunk disease complex (Phaeomoniella, Phaeoacremonium spp.)",
+   "summary": "Esca causes 'tiger-stripe' yellowing and browning between leaf veins and dark spots on berries. It is a wood disease inside the trunk, so leaf sprays cannot cure it.",
+   "immediate_steps": [
+    "Mark affected vines and prune out dead or discoloured wood well below the damage.",
+    "Burn pruned wood; do not leave it in the vineyard.",
+    "Remove and replace vines that decline severely."
+   ],
+   "prevention": [
+    "Prune in dry weather and protect large pruning wounds with a wound sealant or fungicide paste.",
+    "Use certified healthy planting material.",
+    "Avoid large pruning cuts on old wood."
+   ],
+   "organic_options": [
+    "Trichoderma-based wound protectants on fresh pruning cuts."
+   ],
+   "chemical_options": [
+    "No curative spray exists; protect pruning wounds with thiophanate-methyl or a copper paste where approved."
+   ],
+   "irrigation_tip": "Avoid water stress in summer, which makes symptoms worse.",
+   "weather_watch": "Symptoms flare during hot summers after wet springs; rain during pruning spreads spores into wounds."
+  },
+  "Grape___Leaf_blight_(Isariopsis_Leaf_Spot)": {
+   "pathogen": "Fungus (Pseudocercospora vitis / Isariopsis clavispora)",
+   "summary": "Isariopsis leaf spot causes irregular dark-brown spots that merge, dry out and cause early leaf fall, weakening the vine and the next season's crop.",
+   "immediate_steps": [
+    "Remove and destroy infected leaves.",
+    "Spray a protective fungicide covering both leaf surfaces.",
+    "Thin the canopy for faster drying."
+   ],
+   "prevention": [
+    "Keep the vineyard floor clean of fallen leaves.",
+    "Avoid dense canopies through shoot thinning.",
+    "Spray protectively during the monsoon."
+   ],
+   "organic_options": [
+    "Bordeaux mixture 1% or copper oxychloride 50 WP @ 3 g/L."
+   ],
+   "chemical_options": [
+    "Mancozeb 75 WP @ 2 g/L.",
+    "Difenoconazole 25 EC @ 0.5 ml/L; rotate fungicide groups."
+   ],
+   "irrigation_tip": "Use drip irrigation; do not irrigate in the evening.",
+   "weather_watch": "Warm, humid, rainy monsoon weather strongly favours this disease."
+  },
+  "Grape___healthy": {
+   "pathogen": "None detected",
+   "summary": "The grape leaf looks healthy. Downy and powdery mildew are the main threats, so keep scouting after rain.",
+   "immediate_steps": [
+    "No treatment needed.",
+    "Scout the canopy twice a week during humid weather.",
+    "Remove excess shoots for airflow."
+   ],
+   "prevention": [
+    "Maintain an open canopy with shoot and leaf thinning.",
+    "Follow a disease forecast-based spray schedule.",
+    "Clean the vineyard floor after pruning."
+   ],
+   "organic_options": [
+    "Compost and green manure for soil health."
+   ],
+   "chemical_options": [
+    "No chemical treatment required while plants are healthy."
+   ],
+   "irrigation_tip": "Use drip irrigation scheduled by growth stage; reduce water before harvest.",
+   "weather_watch": "Rain with 20-25 °C raises downy mildew risk; dry, warm days with humid nights raise powdery mildew risk."
+  },
+  "Orange___Haunglongbing_(Citrus_greening)": {
+   "pathogen": "Bacterium (Candidatus Liberibacter asiaticus), spread by the Asian citrus psyllid",
+   "summary": "Citrus greening causes blotchy, uneven yellowing of leaves, small lopsided bitter fruit and slow tree decline. There is no cure; control focuses on removing sources and the psyllid insect.",
+   "immediate_steps": [
+    "Get the diagnosis confirmed by the local horticulture department or KVK.",
+    "Remove and destroy confirmed infected trees so they do not spread the disease.",
+    "Control psyllids on nearby healthy trees immediately."
+   ],
+   "prevention": [
+    "Plant only certified disease-free nursery saplings.",
+    "Monitor new flushes for psyllids and spray at flush time.",
+    "Coordinate psyllid control with neighbouring orchards."
+   ],
+   "organic_options": [
+    "Neem oil 1500 ppm @ 5 ml/L on new flushes.",
+    "Yellow sticky traps to monitor psyllids."
+   ],
+   "chemical_options": [
+    "Imidacloprid 17.8 SL @ 0.3 ml/L or thiamethoxam 25 WG @ 0.3 g/L on new flushes (rotate groups)."
+   ],
+   "irrigation_tip": "Keep trees well watered and fed with micronutrients (zinc, manganese) to slow decline.",
+   "weather_watch": "Psyllid populations surge during new leaf flushes in spring and after monsoon rains."
+  },
+  "Peach___Bacterial_spot": {
+   "pathogen": "Bacterium (Xanthomonas arboricola pv. pruni)",
+   "summary": "Bacterial spot causes small angular water-soaked leaf spots that turn purple-black and fall out (shot-hole), plus pitted fruit. It spreads by wind-driven rain.",
+   "immediate_steps": [
+    "Prune and destroy infected twigs.",
+    "Apply a copper spray before rainy periods.",
+    "Avoid working in the orchard when leaves are wet."
+   ],
+   "prevention": [
+    "Grow resistant varieties.",
+    "Avoid excess nitrogen.",
+    "Plant windbreaks to reduce wind-blown rain."
+   ],
+   "organic_options": [
+    "Copper hydroxide 77 WP @ 2 g/L at leaf fall and bud swell (lower rates after leafing to avoid injury)."
+   ],
+   "chemical_options": [
+    "Copper oxychloride 50 WP @ 3 g/L.",
+    "Oxytetracycline-based sprays only where officially approved."
+   ],
+   "irrigation_tip": "Avoid sprinklers; use drip or basin irrigation.",
+   "weather_watch": "Warm (24-30 °C), windy, rainy weather spreads bacteria rapidly."
+  },
+  "Peach___healthy": {
+   "pathogen": "None detected",
+   "summary": "The peach leaf looks healthy. Keep monitoring during wet, windy weather.",
+   "immediate_steps": [
+    "No treatment needed.",
+    "Scout weekly for leaf spots and curl.",
+    "Remove dead twigs."
+   ],
+   "prevention": [
+    "Prune for an open-centre canopy.",
+    "Use balanced fertilizer based on soil tests.",
+    "Dormant copper spray in areas with leaf curl history."
+   ],
+   "organic_options": [
+    "Mulching and compost in the basin."
+   ],
+   "chemical_options": [
+    "No chemical treatment required while plants are healthy."
+   ],
+   "irrigation_tip": "Irrigate regularly during fruit swelling; avoid wetting leaves.",
+   "weather_watch": "Cool wet weather at bud break raises leaf curl risk; warm windy rain raises bacterial spot risk."
+  },
+  "Pepper,_bell___Bacterial_spot": {
+   "pathogen": "Bacterium (Xanthomonas spp.)",
+   "summary": "Bacterial spot causes small water-soaked spots that turn brown with yellow halos, leading to leaf drop and scabby fruit. It spreads through seed, rain splash and handling.",
+   "immediate_steps": [
+    "Remove and destroy infected plants or leaves.",
+    "Spray copper mixed with mancozeb to slow spread.",
+    "Do not handle plants when they are wet."
+   ],
+   "prevention": [
+    "Use certified disease-free seed or hot-water treated seed (50 °C for 25 minutes).",
+    "Rotate away from pepper and tomato for 2 years.",
+    "Use mulch to reduce soil splash."
+   ],
+   "organic_options": [
+    "Copper hydroxide 77 WP @ 2 g/L.",
+    "Pseudomonas fluorescens @ 5 g/L as foliar spray."
+   ],
+   "chemical_options": [
+    "Copper oxychloride 50 WP @ 3 g/L + mancozeb 75 WP @ 2 g/L.",
+    "Streptocycline only where officially approved for the crop."
+   ],
+   "irrigation_tip": "Use drip irrigation; overhead watering splashes bacteria between plants.",
+   "weather_watch": "Warm (24-30 °C) rainy, humid weather favours rapid spread."
+  },
+  "Pepper,_bell___healthy": {
+   "pathogen": "None detected",
+   "summary": "The bell pepper leaf looks healthy. Watch for spots after rain and for sucking pests like thrips and mites.",
+   "immediate_steps": [
+    "No treatment needed.",
+    "Scout twice a week for pests and leaf spots.",
+    "Remove weeds around plants."
+   ],
+   "prevention": [
+    "Use disease-free seedlings.",
+    "Stake plants and mulch the beds.",
+    "Rotate crops away from solanaceous crops."
+   ],
+   "organic_options": [
+    "Neem oil 1500 ppm @ 3 ml/L for early pest control.",
+    "Yellow and blue sticky traps."
+   ],
+   "chemical_options": [
+    "No chemical treatment required while plants are healthy."
+   ],
+   "irrigation_tip": "Keep soil evenly moist with drip irrigation; irregular watering causes blossom-end rot.",
+   "weather_watch": "Warm rainy spells raise bacterial spot risk; hot dry spells raise mite and thrips pressure."
+  },
+  "Potato___Early_blight": {
+   "pathogen": "Fungus (Alternaria solani)",
+   "summary": "Early blight causes brown spots with concentric 'target' rings, usually on older lower leaves first. It weakens plants and reduces tuber size.",
+   "immediate_steps": [
+    "Remove and destroy the worst affected lower leaves.",
+    "Spray a protective fungicide covering the whole canopy.",
+    "Repeat at 10-12 day intervals if the weather stays warm and humid."
+   ],
+   "prevention": [
+    "Rotate with non-solanaceous crops for 2-3 years.",
+    "Apply balanced nitrogen and potash; weak plants are more affected.",
+    "Destroy crop debris after harvest."
+   ],
+   "organic_options": [
+    "Trichoderma viride or Pseudomonas fluorescens @ 5 g/L as spray.",
+    "Copper oxychloride 50 WP @ 3 g/L."
+   ],
+   "chemical_options": [
+    "Mancozeb 75 WP @ 2 g/L or chlorothalonil 75 WP @ 2 g/L.",
+    "Azoxystrobin 23 SC @ 1 ml/L; rotate fungicide groups."
+   ],
+   "irrigation_tip": "Irrigate furrows in the morning; avoid water stress, which increases susceptibility.",
+   "weather_watch": "Warm days (24-29 °C) with heavy dew or alternating wet and dry periods favour spread."
+  },
+  "Potato___Late_blight": {
+   "pathogen": "Oomycete (Phytophthora infestans)",
+   "summary": "Late blight causes dark, water-soaked patches with white mould on the underside of leaves. It can destroy a whole field within days in cool, humid weather. Act immediately.",
+   "immediate_steps": [
+    "Spray a systemic + contact fungicide immediately across the whole field.",
+    "Uproot and destroy severely infected plants away from the field (do not compost).",
+    "Alert neighbouring farmers; spores travel with wind."
+   ],
+   "prevention": [
+    "Use certified disease-free seed tubers.",
+    "Earth up ridges well so spores cannot reach tubers.",
+    "Start protective sprays when cool, foggy weather is forecast."
+   ],
+   "organic_options": [
+    "Copper hydroxide 77 WP @ 2 g/L as a protectant before infection (limited effect once established)."
+   ],
+   "chemical_options": [
+    "Metalaxyl 8% + mancozeb 64% WP @ 2.5 g/L or cymoxanil 8% + mancozeb 64% WP @ 3 g/L.",
+    "Dimethomorph 50 WP @ 1 g/L in rotation; follow with mancozeb 2.5 g/L as protectant."
+   ],
+   "irrigation_tip": "Stop or reduce irrigation during outbreaks; wet soil and foliage speed up spread.",
+   "weather_watch": "Very high risk at 10-25 °C with 90%+ humidity or fog for 10+ hours, especially after rain."
+  },
+  "Potato___healthy": {
+   "pathogen": "None detected",
+   "summary": "The potato leaf looks healthy. Late blight can appear suddenly in cool foggy weather, so keep watching.",
+   "immediate_steps": [
+    "No treatment needed.",
+    "Scout the field twice a week.",
+    "Keep ridges well earthed up."
+   ],
+   "prevention": [
+    "Use certified seed tubers.",
+    "Rotate crops every season.",
+    "Follow late blight forecasts in your district."
+   ],
+   "organic_options": [
+    "Farmyard manure and green manure before planting."
+   ],
+   "chemical_options": [
+    "No chemical treatment required while plants are healthy; a preventive mancozeb spray is advised only when blight weather is forecast."
+   ],
+   "irrigation_tip": "Light, frequent furrow irrigation; stop 10 days before harvest.",
+   "weather_watch": "Cool (10-20 °C), cloudy, foggy weather with high humidity is the danger signal for late blight."
+  },
+  "Raspberry___healthy": {
+   "pathogen": "None detected",
+   "summary": "The raspberry leaf looks healthy. Good airflow and cane management keep diseases away.",
+   "immediate_steps": [
+    "No treatment needed.",
+    "Remove old fruited canes after harvest.",
+    "Scout for leaf spots and mites."
+   ],
+   "prevention": [
+    "Thin canes to allow airflow.",
+    "Mulch and keep weeds down.",
+    "Avoid wetting foliage."
+   ],
+   "organic_options": [
+    "Compost and organic mulch."
+   ],
+   "chemical_options": [
+    "No chemical treatment required while plants are healthy."
+   ],
+   "irrigation_tip": "Use drip irrigation for steady moisture, especially during fruiting.",
+   "weather_watch": "Warm humid weather raises fungal cane and fruit rot risk."
+  },
+  "Soybean___healthy": {
+   "pathogen": "None detected",
+   "summary": "The soybean leaf looks healthy. Keep scouting for rust, yellow mosaic and defoliating caterpillars during the monsoon.",
+   "immediate_steps": [
+    "No treatment needed.",
+    "Scout weekly, especially at flowering and pod formation.",
+    "Keep drainage channels open."
+   ],
+   "prevention": [
+    "Treat seed with Rhizobium and Trichoderma before sowing.",
+    "Use recommended resistant varieties for your region.",
+    "Control whiteflies early to prevent yellow mosaic virus."
+   ],
+   "organic_options": [
+    "Seed treatment with Trichoderma viride @ 4 g/kg.",
+    "Yellow sticky traps for whiteflies."
+   ],
+   "chemical_options": [
+    "No chemical treatment required while plants are healthy."
+   ],
+   "irrigation_tip": "Soybean is mostly rain-fed; give protective irrigation at flowering and pod filling during dry spells and avoid waterlogging.",
+   "weather_watch": "Continuous rain and humidity raise rust risk; dry warm spells raise whitefly-borne mosaic risk."
+  },
+  "Squash___Powdery_mildew": {
+   "pathogen": "Fungus (Podosphaera xanthii / Erysiphe cichoracearum)",
+   "summary": "Powdery mildew coats leaves with white powder, causing them to yellow and dry. It reduces fruit size and quality and spreads quickly in dry, warm weather.",
+   "immediate_steps": [
+    "Remove the most affected older leaves.",
+    "Spray sulphur or a systemic fungicide at first appearance.",
+    "Cover the undersides of leaves when spraying."
+   ],
+   "prevention": [
+    "Grow tolerant varieties.",
+    "Space plants widely for airflow.",
+    "Start preventive sprays when the first spots appear in nearby fields."
+   ],
+   "organic_options": [
+    "Wettable sulphur 80 WP @ 2 g/L (avoid above 32 °C; some cucurbits are sulphur-sensitive; test first).",
+    "Potassium bicarbonate @ 5 g/L or neem oil 1500 ppm @ 3 ml/L."
+   ],
+   "chemical_options": [
+    "Hexaconazole 5 EC @ 1 ml/L.",
+    "Azoxystrobin 23 SC @ 1 ml/L in rotation."
+   ],
+   "irrigation_tip": "Water at the base with drip; mildew does not need wet leaves, but stressed plants suffer more.",
+   "weather_watch": "Warm (20-30 °C), dry days with humid nights favour powdery mildew."
+  },
+  "Strawberry___Leaf_scorch": {
+   "pathogen": "Fungus (Diplocarpon earlianum)",
+   "summary": "Leaf scorch causes many small purple spots that merge until the leaf looks burnt. It weakens plants and reduces the next season's yield.",
+   "immediate_steps": [
+    "Remove and destroy infected leaves.",
+    "Apply a protective fungicide.",
+    "Avoid overhead irrigation."
+   ],
+   "prevention": [
+    "Plant certified disease-free runners.",
+    "Renovate beds after harvest by removing old leaves.",
+    "Avoid over-fertilizing with nitrogen."
+   ],
+   "organic_options": [
+    "Copper hydroxide 77 WP @ 2 g/L."
+   ],
+   "chemical_options": [
+    "Captan 50 WP @ 2 g/L.",
+    "Myclobutanil 10 WP @ 0.4 g/L where approved."
+   ],
+   "irrigation_tip": "Drip irrigation under plastic mulch keeps leaves dry.",
+   "weather_watch": "Warm, wet weather with long leaf wetness spreads the disease."
+  },
+  "Strawberry___healthy": {
+   "pathogen": "None detected",
+   "summary": "The strawberry leaf looks healthy. Keep leaves dry and beds clean to prevent leaf and fruit diseases.",
+   "immediate_steps": [
+    "No treatment needed.",
+    "Remove old and dead leaves.",
+    "Scout for mites under the leaves."
+   ],
+   "prevention": [
+    "Use plastic or straw mulch.",
+    "Plant certified runners.",
+    "Maintain spacing for airflow."
+   ],
+   "organic_options": [
+    "Neem oil 1500 ppm @ 3 ml/L if mites appear."
+   ],
+   "chemical_options": [
+    "No chemical treatment required while plants are healthy."
+   ],
+   "irrigation_tip": "Use drip irrigation; keep soil moist but not waterlogged.",
+   "weather_watch": "Warm humid weather raises leaf scorch and grey mould risk."
+  },
+  "Tomato___Bacterial_spot": {
+   "pathogen": "Bacterium (Xanthomonas spp.)",
+   "summary": "Bacterial spot causes small dark greasy spots on leaves and raised scabby spots on fruit. It spreads through infected seed, rain splash and handling of wet plants.",
+   "immediate_steps": [
+    "Remove and destroy infected leaves and badly affected plants.",
+    "Spray copper mixed with mancozeb to slow spread.",
+    "Disinfect stakes and tools."
+   ],
+   "prevention": [
+    "Use disease-free seed and seedlings.",
+    "Rotate away from tomato and chilli for 2 years.",
+    "Mulch to stop soil splash."
+   ],
+   "organic_options": [
+    "Copper hydroxide 77 WP @ 2 g/L.",
+    "Pseudomonas fluorescens @ 5 g/L."
+   ],
+   "chemical_options": [
+    "Copper oxychloride 50 WP @ 3 g/L + mancozeb 75 WP @ 2 g/L.",
+    "Streptocycline only where officially approved."
+   ],
+   "irrigation_tip": "Use drip irrigation; never use sprinklers on infected fields.",
+   "weather_watch": "Warm (24-30 °C) rainy, windy weather spreads bacteria quickly."
+  },
+  "Tomato___Early_blight": {
+   "pathogen": "Fungus (Alternaria solani)",
+   "summary": "Early blight causes brown spots with concentric 'target' rings on older leaves, yellowing around the spots and leaf drop from the bottom of the plant upwards.",
+   "immediate_steps": [
+    "Pluck and destroy spotted lower leaves.",
+    "Spray a protective fungicide covering all leaves.",
+    "Repeat after 10-12 days if humid weather continues."
+   ],
+   "prevention": [
+    "Stake plants and prune lower leaves touching the soil.",
+    "Mulch to stop soil splashing onto leaves.",
+    "Rotate with non-solanaceous crops."
+   ],
+   "organic_options": [
+    "Trichoderma viride @ 5 g/L or Pseudomonas fluorescens @ 5 g/L.",
+    "Neem oil 1500 ppm @ 3 ml/L as a supplement."
+   ],
+   "chemical_options": [
+    "Mancozeb 75 WP @ 2 g/L or chlorothalonil 75 WP @ 2 g/L.",
+    "Azoxystrobin 23 SC @ 1 ml/L or difenoconazole 25 EC @ 0.5 ml/L in rotation."
+   ],
+   "irrigation_tip": "Use drip irrigation in the morning; avoid wetting foliage.",
+   "weather_watch": "Warm (24-29 °C) weather with heavy dew or frequent showers increases spread."
+  },
+  "Tomato___Late_blight": {
+   "pathogen": "Oomycete (Phytophthora infestans)",
+   "summary": "Late blight causes large, dark, greasy-looking patches on leaves and stems, white mould under leaves in humid weather, and firm brown rot on fruit. It spreads extremely fast.",
+   "immediate_steps": [
+    "Spray a systemic + contact fungicide immediately.",
+    "Remove and destroy infected plants away from the field.",
+    "Warn neighbouring tomato and potato growers."
+   ],
+   "prevention": [
+    "Use healthy seedlings and avoid planting near potato fields.",
+    "Stake and prune for airflow.",
+    "Spray protectively when cool, humid weather is forecast."
+   ],
+   "organic_options": [
+    "Copper hydroxide 77 WP @ 2 g/L as a protectant before infection."
+   ],
+   "chemical_options": [
+    "Metalaxyl 8% + mancozeb 64% WP @ 2.5 g/L or cymoxanil 8% + mancozeb 64% WP @ 3 g/L.",
+    "Dimethomorph 50 WP @ 1 g/L in rotation."
+   ],
+   "irrigation_tip": "Reduce irrigation and keep foliage dry during outbreaks.",
+   "weather_watch": "Very high risk at 10-25 °C with humidity above 90% for 10+ hours or continuous drizzle."
+  },
+  "Tomato___Leaf_Mold": {
+   "pathogen": "Fungus (Passalora fulva)",
+   "summary": "Leaf mould causes pale yellow patches on the upper leaf surface with olive-green velvety mould underneath. It is most common in greenhouses and dense, humid crops.",
+   "immediate_steps": [
+    "Remove infected leaves.",
+    "Increase ventilation, especially in polyhouses.",
+    "Spray a fungicide covering leaf undersides."
+   ],
+   "prevention": [
+    "Keep relative humidity below 85% with ventilation.",
+    "Space and prune plants for airflow.",
+    "Use resistant varieties in polyhouses."
+   ],
+   "organic_options": [
+    "Copper oxychloride 50 WP @ 3 g/L.",
+    "Bacillus subtilis based biofungicide as per label."
+   ],
+   "chemical_options": [
+    "Chlorothalonil 75 WP @ 2 g/L or mancozeb 75 WP @ 2 g/L.",
+    "Difenoconazole 25 EC @ 0.5 ml/L."
+   ],
+   "irrigation_tip": "Water in the morning with drip; avoid evening irrigation that raises night humidity.",
+   "weather_watch": "Humidity above 85% with 20-25 °C temperatures, common in closed polyhouses."
+  },
+  "Tomato___Septoria_leaf_spot": {
+   "pathogen": "Fungus (Septoria lycopersici)",
+   "summary": "Septoria leaf spot causes many small round spots with dark borders and grey centres containing tiny black dots. Heavy infection strips lower leaves and exposes fruit to sunscald.",
+   "immediate_steps": [
+    "Remove spotted lower leaves.",
+    "Apply a protective fungicide.",
+    "Avoid working among wet plants."
+   ],
+   "prevention": [
+    "Mulch and stake plants.",
+    "Remove crop debris and weeds such as nightshade.",
+    "Rotate crops for 2-3 years."
+   ],
+   "organic_options": [
+    "Copper oxychloride 50 WP @ 3 g/L."
+   ],
+   "chemical_options": [
+    "Chlorothalonil 75 WP @ 2 g/L or mancozeb 75 WP @ 2 g/L.",
+    "Azoxystrobin 23 SC @ 1 ml/L in rotation."
+   ],
+   "irrigation_tip": "Drip irrigation only; rain splash and sprinklers spread spores.",
+   "weather_watch": "Moderate temperatures (20-25 °C) with frequent rain or long leaf wetness."
+  },
+  "Tomato___Spider_mites Two-spotted_spider_mite": {
+   "pathogen": "Pest (Tetranychus urticae, two-spotted spider mite)",
+   "summary": "Spider mites suck sap from the underside of leaves, causing fine yellow speckling, bronzing and fine webbing. Populations explode in hot, dry weather.",
+   "immediate_steps": [
+    "Spray water forcefully on leaf undersides to knock mites off.",
+    "Remove heavily infested leaves.",
+    "Apply a miticide or neem oil, covering leaf undersides."
+   ],
+   "prevention": [
+    "Avoid dusty conditions and water stress.",
+    "Do not overuse broad-spectrum insecticides that kill natural predators.",
+    "Remove weeds that host mites."
+   ],
+   "organic_options": [
+    "Neem oil 1500 ppm @ 5 ml/L.",
+    "Wettable sulphur 80 WP @ 2 g/L (not above 32 °C)."
+   ],
+   "chemical_options": [
+    "Fenazaquin 10 EC @ 2 ml/L or spiromesifen 22.9 SC @ 0.8 ml/L.",
+    "Abamectin 1.9 EC @ 0.5 ml/L; rotate miticide groups."
+   ],
+   "irrigation_tip": "Keep plants well watered; drought-stressed plants attract more mites.",
+   "weather_watch": "Hot (above 27 °C), dry weather with low humidity causes rapid mite build-up."
+  },
+  "Tomato___Target_Spot": {
+   "pathogen": "Fungus (Corynespora cassiicola)",
+   "summary": "Target spot causes brown spots with light centres and concentric rings on leaves, stems and fruit. It spreads fast in warm, humid, dense crops.",
+   "immediate_steps": [
+    "Remove infected leaves and improve airflow by pruning.",
+    "Apply a protective fungicide.",
+    "Repeat after 7-10 days in humid weather."
+   ],
+   "prevention": [
+    "Avoid dense planting.",
+    "Remove crop debris after harvest.",
+    "Rotate with non-host crops."
+   ],
+   "organic_options": [
+    "Copper oxychloride 50 WP @ 3 g/L.",
+    "Bacillus subtilis based biofungicide as per label."
+   ],
+   "chemical_options": [
+    "Chlorothalonil 75 WP @ 2 g/L.",
+    "Azoxystrobin 23 SC @ 1 ml/L in rotation."
+   ],
+   "irrigation_tip": "Use drip irrigation and avoid wetting leaves.",
+   "weather_watch": "Warm (25-30 °C) and humid weather with long leaf wetness."
+  },
+  "Tomato___Tomato_Yellow_Leaf_Curl_Virus": {
+   "pathogen": "Virus (TYLCV), spread by whiteflies",
+   "summary": "Yellow leaf curl makes leaves small, curled upwards and yellow at the edges, with stunted plants and very poor fruit set. There is no cure; control the whitefly vector.",
+   "immediate_steps": [
+    "Uproot and destroy infected plants early to remove the virus source.",
+    "Control whiteflies on the remaining plants.",
+    "Install yellow sticky traps across the field."
+   ],
+   "prevention": [
+    "Grow TYLCV-resistant hybrids.",
+    "Raise seedlings under insect-proof net (40-50 mesh).",
+    "Use a barrier crop such as maize around the field and remove weed hosts."
+   ],
+   "organic_options": [
+    "Neem oil 1500 ppm @ 5 ml/L against whiteflies.",
+    "Yellow sticky traps @ 10-12 per acre."
+   ],
+   "chemical_options": [
+    "No chemical cures the virus. For whiteflies: diafenthiuron 50 WP @ 1 g/L, or thiamethoxam 25 WG @ 0.3 g/L (rotate groups)."
+   ],
+   "irrigation_tip": "Maintain regular irrigation and nutrition to help plants tolerate infection.",
+   "weather_watch": "Warm, dry weather favours whitefly build-up and virus spread."
+  },
+  "Tomato___Tomato_mosaic_virus": {
+   "pathogen": "Virus (Tomato mosaic virus / ToMV)",
+   "summary": "Mosaic virus causes light and dark green mottled, sometimes distorted leaves and uneven fruit ripening. It spreads through contaminated hands, tools and seed; there is no cure.",
+   "immediate_steps": [
+    "Remove and destroy infected plants.",
+    "Wash hands with soap and disinfect tools before touching healthy plants.",
+    "Do not smoke or use tobacco near plants (tobacco can carry related viruses)."
+   ],
+   "prevention": [
+    "Use certified virus-free or resistant seed.",
+    "Dip hands in milk or soap solution during pruning and tying.",
+    "Control weeds that host the virus."
+   ],
+   "organic_options": [
+    "Strict sanitation; skimmed milk (10%) spray on tools and hands reduces mechanical spread."
+   ],
+   "chemical_options": [
+    "No chemical treatment controls the virus; focus on sanitation and resistant varieties."
+   ],
+   "irrigation_tip": "Keep plants well watered and fed to reduce yield loss.",
+   "weather_watch": "Spread is mainly through handling, not weather; be careful during pruning and harvesting."
+  },
+  "Tomato___healthy": {
+   "pathogen": "None detected",
+   "summary": "The tomato leaf looks healthy. Keep scouting because early blight, late blight and leaf curl can appear quickly.",
+   "immediate_steps": [
+    "No treatment needed.",
+    "Scout the crop twice a week, including leaf undersides.",
+    "Remove lower leaves touching the soil."
+   ],
+   "prevention": [
+    "Stake and mulch plants.",
+    "Use yellow sticky traps to monitor whiteflies.",
+    "Rotate crops away from tomato, potato, chilli and brinjal."
+   ],
+   "organic_options": [
+    "Trichoderma-enriched compost at planting.",
+    "Neem oil 1500 ppm @ 3 ml/L if sucking pests appear."
+   ],
+   "chemical_options": [
+    "No chemical treatment required while plants are healthy."
+   ],
+   "irrigation_tip": "Use drip irrigation; keep moisture even to avoid blossom-end rot and fruit cracking.",
+   "weather_watch": "Cool humid weather raises late blight risk; warm humid weather raises early blight risk; hot dry weather raises whitefly and mite risk."
+  }
+ }
+}

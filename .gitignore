@@ -36,5 +36,19 @@ Thumbs.db
 .idea/
 .vscode/
 
-# Streamlit
-.streamlit/secrets.toml
+# Streamlit (legacy)
+.streamlit/
+
+# Vendored tooling (use a system Node.js install instead)
+node_tools/
+
+# Local SQLite databases (outbreak reports, advice cache)
+*.db
+*.db-journal
+backend/data/
+
+# Local ONNX export scratch (the shipped model lives in frontend/public/model/)
+model/weights/export/
+
+# Local export environment (model/export_onnx_local.py)
+.venv-export/

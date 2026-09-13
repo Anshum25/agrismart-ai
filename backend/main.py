@@ -1,314 +1,143 @@
 """
-AgriSmart AI — FastAPI Backend
+AgriSmart AI — FastAPI backend
 ==============================
-Serves the trained ResNet50 model via HTTP API so the React frontend
-(or any other client) can upload leaf images and receive diagnostic results.
+Serves the ONNX-exported ResNet50 model (no TensorFlow at runtime) plus the
+advisory services used by the React PWA.
 
-Endpoints:
-  GET  /health                → model status, version info
-  POST /predict               → image → label, confidence, advice
-  POST /predict/gradcam       → image → label, confidence, advice, gradcam base64
+  GET  /health                 model + service status
+  POST /predict                leaf image -> diagnosis (+ Grad-CAM)
+  POST /advice                 structured treatment advice in 9 languages
+  GET  /insights               live weather risk + irrigation + sustainability
+  GET  /forecast               7-day disease risk forecast + best spray day
+  POST /voice/ask              voice/text question -> answer (Groq Whisper + LLM)
+  POST /reports                share an anonymous diagnosis to the outbreak map
+  GET  /reports/aggregate      outbreak map cells
+  GET  /alerts                 nearby disease alerts
+
+Run from the project root:  uvicorn backend.main:app --reload
 """
 
 from __future__ import annotations
 
-import base64
-import io
-import json
 import logging
 import os
 import sys
+import urllib.request
+from contextlib import asynccontextmanager
 from pathlib import Path
-from typing import Any
 
-import numpy as np
-from fastapi import FastAPI, File, HTTPException, UploadFile
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
-from PIL import Image
-
-# ---------------------------------------------------------------------------
-# Path setup — make sure project root is importable
-# ---------------------------------------------------------------------------
 _ROOT = Path(__file__).resolve().parent.parent
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
-from model.predict import (
-    extract_crop_type,
-    format_label,
-    load_model,
-    predict_from_array,
-)
-from model.config import WEIGHTS_DIR
+from dotenv import load_dotenv  # noqa: E402
+
+load_dotenv(_ROOT / ".env")
+
+from fastapi import FastAPI  # noqa: E402
+from fastapi.middleware.cors import CORSMiddleware  # noqa: E402
+from slowapi import _rate_limit_exceeded_handler  # noqa: E402
+from slowapi.errors import RateLimitExceeded  # noqa: E402
+
+from backend import db  # noqa: E402
+from backend.routes import advice, predict, reports  # noqa: E402
+from backend.state import limiter, model_state  # noqa: E402
+from bonus.assistant import groq_client  # noqa: E402
+from model.runtime import DEFAULT_MODEL_DIR, Engine, ModelNotAvailable, sha256_file  # noqa: E402
 
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger("agrismart.api")
 
-# ---------------------------------------------------------------------------
-# App init
-# ---------------------------------------------------------------------------
+VERSION = "2.0.0"
+
+
+def download_model_if_missing(model_dir: Path) -> None:
+    """Fetch the ONNX file from MODEL_URL when it is not bundled with the repo."""
+    url = os.getenv("MODEL_URL", "").strip()
+    target = model_dir / "agrismart.onnx"
+    if target.exists() or not url:
+        return
+    model_dir.mkdir(parents=True, exist_ok=True)
+    tmp = target.with_suffix(".part")
+    log.info("Downloading model from %s", url)
+    urllib.request.urlretrieve(url, tmp)
+    expected = os.getenv("MODEL_SHA256", "").strip().lower()
+    if expected and sha256_file(tmp) != expected:
+        tmp.unlink(missing_ok=True)
+        raise ModelNotAvailable("Downloaded model failed SHA256 verification")
+    tmp.replace(target)
+
+
+def load_engine() -> None:
+    model_dir = Path(os.getenv("MODEL_DIR") or DEFAULT_MODEL_DIR)
+    try:
+        download_model_if_missing(model_dir)
+        model_state.engine = Engine(model_dir)
+        model_state.error = None
+        log.info("Model loaded from %s (%s)", model_dir, model_state.engine.meta.get("quantization"))
+    except Exception as exc:  # keep the API up for advice/forecast/map, but be honest
+        model_state.engine = None
+        model_state.error = str(exc)
+        log.error("Model NOT loaded - /predict will return 503: %s", exc)
+
+
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    db.init()
+    if os.getenv("SEED_DEMO_DATA", "0") == "1" and db.count_reports() == 0:
+        db.seed_demo_reports()
+        log.info("Seeded simulated outbreak reports (source=demo_seed)")
+    load_engine()
+    yield
+
+
 app = FastAPI(
     title="AgriSmart AI API",
-    description="Plant disease detection via ResNet50 — Smart India Hackathon 2026",
-    version="1.0.0",
+    description="Explainable crop disease diagnosis and farmer advisory — Smart India Hackathon 2026",
+    version=VERSION,
+    lifespan=lifespan,
 )
 
-# CORS — allow local Vite dev server and any Railway origin
-_origins = [
-    "http://localhost:5173",
-    "http://localhost:3000",
-    "http://127.0.0.1:5173",
-    os.getenv("FRONTEND_ORIGIN", "*"),
-]
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
+_origins = [o.strip() for o in os.getenv(
+    "FRONTEND_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173,http://localhost:4173"
+).split(",") if o.strip()]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=_origins,
-    allow_credentials=True,
-    allow_methods=["*"],
+    allow_origin_regex=os.getenv("FRONTEND_ORIGIN_REGEX") or None,
+    allow_credentials=False,
+    allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )
 
-# ---------------------------------------------------------------------------
-# Startup: warm-up model
-# ---------------------------------------------------------------------------
-_model_loaded = False
-_model_error: str | None = None
+app.include_router(predict.router)
+app.include_router(advice.router)
+app.include_router(reports.router)
 
 
-@app.on_event("startup")
-async def _startup():
-    global _model_loaded, _model_error
-    try:
-        # Attempt to auto-download weights if MODEL_WEIGHTS_URL is set
-        model_path = WEIGHTS_DIR / "agrismart_resnet50.keras"
-        if not model_path.exists():
-            url = os.getenv("MODEL_WEIGHTS_URL")
-            if url:
-                import urllib.request
-                WEIGHTS_DIR.mkdir(parents=True, exist_ok=True)
-                log.info(f"Downloading model weights from {url} ...")
-                urllib.request.urlretrieve(url, model_path)
-                log.info("Download complete.")
-
-        load_model()
-        _model_loaded = True
-        log.info("✅ ResNet50 model loaded successfully.")
-    except Exception as exc:
-        _model_error = str(exc)
-        log.warning(f"⚠️  Model not loaded (demo mode): {exc}")
-
-
-# ---------------------------------------------------------------------------
-# Helper utilities
-# ---------------------------------------------------------------------------
-
-def _pil_from_bytes(data: bytes) -> Image.Image:
-    """Convert raw upload bytes → RGB PIL Image."""
-    return Image.open(io.BytesIO(data)).convert("RGB")
-
-
-def _image_to_b64(img: np.ndarray | Image.Image) -> str:
-    """Encode a numpy array or PIL image as a base64 PNG string."""
-    if isinstance(img, np.ndarray):
-        pil = Image.fromarray(img.astype(np.uint8))
-    else:
-        pil = img
-    buf = io.BytesIO()
-    pil.save(buf, format="PNG")
-    return base64.b64encode(buf.getvalue()).decode()
-
-
-def _load_training_metrics() -> dict[str, Any]:
-    metrics_path = WEIGHTS_DIR / "training_metrics.json"
-    if metrics_path.exists():
-        try:
-            return json.loads(metrics_path.read_text())
-        except Exception:
-            pass
-    return {"test_accuracy": 0.9896, "val_accuracy": 0.9885, "test_loss": 0.0324}
-
-
-def _mock_predict(label: str = "Tomato___Early_blight", confidence: float = 0.91):
-    """Fallback when model weights aren't present (demo/cloud mode)."""
-    return label, confidence
-
-def _generate_mock_gradcam(img_arr: np.ndarray) -> Image.Image:
-    """Generates a highly realistic mock Grad-CAM heatmap for demo mode."""
-    import cv2
-    h, w = img_arr.shape[:2]
-    heatmap = np.zeros((h, w), dtype=np.float32)
-    center_x, center_y = w // 2, h // 2
-    cv2.circle(heatmap, (center_x, center_y), min(w, h) // 3, 1.0, -1)
-    heatmap = cv2.GaussianBlur(heatmap, (99, 99), 0)
-    
-    heatmap_uint8 = np.uint8(255 * heatmap)
-    jet = cv2.applyColorMap(heatmap_uint8, cv2.COLORMAP_JET)
-    
-    img_bgr = cv2.cvtColor(img_arr, cv2.COLOR_RGB2BGR) if img_arr.shape[2] == 3 else img_arr
-    overlay = cv2.addWeighted(img_bgr, 0.5, jet, 0.5, 0)
-    overlay_rgb = cv2.cvtColor(overlay, cv2.COLOR_BGR2RGB)
-    return Image.fromarray(overlay_rgb)
-
-
-def _severity(label: str, confidence: float) -> str:
-    if "healthy" in label.lower():
-        return "Healthy"
-    if confidence > 0.85:
-        return "Severe" if "blight" in label.lower() else "Moderate"
-    return "Mild"
-
-
-# ---------------------------------------------------------------------------
-# GET /health
-# ---------------------------------------------------------------------------
-
-@app.get("/health")
-async def health():
-    metrics = _load_training_metrics()
+@app.get("/health", tags=["status"])
+def health():
+    engine = model_state.engine
+    meta = engine.meta if engine else {}
     return {
         "status": "ok",
-        "model_loaded": _model_loaded,
-        "model_error": _model_error,
-        "test_accuracy": metrics.get("test_accuracy", 0.9896),
-        "val_accuracy": metrics.get("val_accuracy", 0.9885),
-        "classes": 38,
+        "version": VERSION,
+        "model_loaded": engine is not None,
+        "model_error": model_state.error,
+        "classes": len(meta.get("labels", [])) if engine else None,
         "backbone": "ResNet50",
-        "version": "1.0.0",
+        "runtime": "onnxruntime",
+        "quantization": meta.get("quantization"),
+        "parity": meta.get("parity"),
+        "ai_advice_enabled": groq_client() is not None,
+        "reports_stored": db.count_reports(),
     }
 
 
-# ---------------------------------------------------------------------------
-# POST /predict
-# ---------------------------------------------------------------------------
-
-@app.post("/predict")
-async def predict_endpoint(file: UploadFile = File(...)):
-    """
-    Accept a leaf image upload and return disease prediction + care advice.
-    Does NOT compute Grad-CAM (faster response).
-    """
-    if not file.content_type.startswith("image/"):
-        raise HTTPException(status_code=422, detail="Only image files are accepted.")
-
-    raw = await file.read()
-    try:
-        pil_img = _pil_from_bytes(raw)
-    except Exception as exc:
-        raise HTTPException(status_code=422, detail=f"Cannot decode image: {exc}")
-
-    img_arr = np.asarray(pil_img)
-
-    if _model_loaded:
-        try:
-            label, confidence = predict_from_array(img_arr)
-        except Exception as exc:
-            raise HTTPException(status_code=500, detail=f"Inference error: {exc}")
-    else:
-        # Demo mode — deterministic mock
-        label, confidence = _mock_predict()
-
-    # Gemini care advice (graceful fallback built in)
-    try:
-        from bonus.assistant import get_care_advice
-        advice_data = get_care_advice(label)
-    except Exception:
-        advice_data = {
-            "advice": "Care advice is temporarily unavailable. General tips: remove affected leaves, avoid overhead watering, improve air circulation, and consult your local agricultural extension office for disease-specific treatment.",
-            "irrigation_advice": "Irrigation advice is temporarily unavailable.",
-            "weather_risk": "Weather risk assessment is temporarily unavailable.",
-            "sustainability": "Sustainability options are temporarily unavailable."
-        }
-
-    return {
-        "label": label,
-        "pretty_label": format_label(label),
-        "crop": extract_crop_type(label),
-        "confidence": round(confidence, 4),
-        "confidence_pct": f"{confidence:.1%}",
-        "is_healthy": "healthy" in label.lower(),
-        "severity": _severity(label, confidence),
-        "advice": advice_data.get("advice", ""),
-        "irrigation_advice": advice_data.get("irrigation_advice", ""),
-        "weather_risk": advice_data.get("weather_risk", ""),
-        "sustainability_advice": advice_data.get("sustainability", ""),
-        "model_loaded": _model_loaded,
-    }
-
-
-# ---------------------------------------------------------------------------
-# POST /predict/gradcam
-# ---------------------------------------------------------------------------
-
-@app.post("/predict/gradcam")
-async def predict_gradcam_endpoint(file: UploadFile = File(...)):
-    """
-    Full diagnosis: prediction + Grad-CAM visual explanation.
-    Returns the original image and the Grad-CAM overlay as base64 PNGs.
-    """
-    if not file.content_type.startswith("image/"):
-        raise HTTPException(status_code=422, detail="Only image files are accepted.")
-
-    raw = await file.read()
-    try:
-        pil_img = _pil_from_bytes(raw)
-    except Exception as exc:
-        raise HTTPException(status_code=422, detail=f"Cannot decode image: {exc}")
-
-    img_arr = np.asarray(pil_img)
-
-    if _model_loaded:
-        try:
-            label, confidence = predict_from_array(img_arr)
-            from model.gradcam import generate_gradcam
-            gradcam_result = generate_gradcam(img_arr, return_overlay=True)
-            overlay_b64 = _image_to_b64(gradcam_result["overlay"])
-            original_b64 = _image_to_b64(pil_img)
-        except Exception as exc:
-            raise HTTPException(status_code=500, detail=f"Inference/GradCAM error: {exc}")
-    else:
-        # Demo mode mock
-        label, confidence = _mock_predict()
-        # Return original image as both original and mock overlay
-        original_b64 = _image_to_b64(pil_img)
-        try:
-            overlay_b64 = _image_to_b64(_generate_mock_gradcam(img_arr))
-        except Exception:
-            overlay_b64 = original_b64
-
-    try:
-        from bonus.assistant import get_care_advice
-        advice_data = get_care_advice(label)
-    except Exception:
-        advice_data = {
-            "advice": "Care advice is temporarily unavailable. Remove affected leaves, avoid overhead watering, improve air circulation.",
-            "irrigation_advice": "Irrigation advice is temporarily unavailable.",
-            "weather_risk": "Weather risk assessment is temporarily unavailable.",
-            "sustainability": "Sustainability options are temporarily unavailable."
-        }
-
-    return {
-        "label": label,
-        "pretty_label": format_label(label),
-        "crop": extract_crop_type(label),
-        "confidence": round(confidence, 4),
-        "confidence_pct": f"{confidence:.1%}",
-        "is_healthy": "healthy" in label.lower(),
-        "severity": _severity(label, confidence),
-        "advice": advice_data.get("advice", ""),
-        "irrigation_advice": advice_data.get("irrigation_advice", ""),
-        "weather_risk": advice_data.get("weather_risk", ""),
-        "sustainability_advice": advice_data.get("sustainability", ""),
-        "model_loaded": _model_loaded,
-        "original_image_b64": original_b64,
-        "gradcam_image_b64": overlay_b64,
-    }
-
-
-# ---------------------------------------------------------------------------
-# Run directly: uvicorn backend.main:app --reload
-# ---------------------------------------------------------------------------
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+
+    uvicorn.run("backend.main:app", host="0.0.0.0", port=int(os.getenv("PORT", "8000")), reload=True)

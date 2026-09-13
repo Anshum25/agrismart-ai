@@ -1,2 +1,0 @@
-#!/bin/sh
-exec /Users/apple/Library/Caches/ms-playwright-go/1.50.1/node "$@"

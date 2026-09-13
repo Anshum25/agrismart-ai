@@ -32,6 +32,17 @@ Dense(256, ReLU) → Dropout(0.4) → Dense(38, Softmax)
 
 Metrics are saved to `model/weights/training_metrics.json` after `model/train.py` completes.
 
+## Deployment export & verification
+
+`model/export_onnx.py` (run via `notebooks/export_onnx.ipynb`) converts the Keras model to a two-output ONNX model
+(last-conv features + probabilities), quantizes it to int8, and writes to `frontend/public/model/reports/`:
+
+- `parity_report.json`: Keras vs ONNX accuracy and top-1 agreement on 500 held-out images, plus Grad-CAM cosine similarity against `model/gradcam.py`
+- `classification_report.json`: per-class precision, recall and F1 on the full held-out test split
+- `confusion_matrix.csv`
+
+Paste the headline numbers into the table above once the export has been run.
+
 ## Explainability
 
 Grad-CAM (`model/gradcam.py`) highlights image regions that drive predictions — useful for farmer trust and demo presentations.

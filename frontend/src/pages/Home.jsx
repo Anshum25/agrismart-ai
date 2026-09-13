@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { API_DOCS_URL } from '../lib/api'
 import {
   Leaf, Zap, Eye, MessageCircle, ShieldCheck, BarChart2,
   Upload, Brain, ArrowRight, GitBranch, ChevronRight,
@@ -38,16 +39,16 @@ const IMPACT_ITEMS = [
 ]
 
 const TECH_STACK = [
-  { name: 'Python 3.9', color: '#3776AB', icon: '🐍' },
-  { name: 'TensorFlow', color: '#FF6F00', icon: '🔶' },
-  { name: 'Keras', color: '#D00000', icon: '🔴' },
+  { name: 'TensorFlow / Keras', color: '#FF6F00', icon: '🔶' },
   { name: 'ResNet50', color: '#064e3b', icon: '🧠' },
-  { name: 'OpenCV', color: '#5C3EE8', icon: '👁️' },
-  { name: 'FastAPI', color: '#009688', icon: '⚡' },
-  { name: 'React + Vite', color: '#61DAFB', icon: '⚛️' },
-  { name: 'Groq Llama 3', color: '#F55036', icon: '🤖' },
-  { name: 'Google Colab', color: '#F9AB00', icon: '📓' },
+  { name: 'ONNX Runtime (web + server)', color: '#5C3EE8', icon: '⚙️' },
   { name: 'Grad-CAM', color: '#7c3aed', icon: '🔥' },
+  { name: 'FastAPI', color: '#009688', icon: '⚡' },
+  { name: 'React PWA', color: '#61DAFB', icon: '⚛️' },
+  { name: 'Groq GPT-OSS 120B', color: '#F55036', icon: '🤖' },
+  { name: 'Whisper speech-to-text', color: '#10a37f', icon: '🎙️' },
+  { name: 'Open-Meteo', color: '#2563eb', icon: '🌦️' },
+  { name: 'Leaflet + OpenStreetMap', color: '#199900', icon: '🗺️' },
 ]
 
 const ROADMAP_ITEMS = [
@@ -73,7 +74,7 @@ export default function Home() {
         </div>
 
         <div className="container hero-content">
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 420px', gap: 64, alignItems: 'center' }}>
+          <div className="hero-layout">
             <div>
               <motion.div
                 className="hero-eyebrow"
@@ -95,8 +96,9 @@ export default function Home() {
                 className="hero-desc"
                 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .55, delay: .2 }}
               >
-                Upload a leaf photo and get an instant disease classification, a Grad-CAM visual explanation,
-                and AI-generated treatment advice — powered by a ResNet50 model trained to 98.96% accuracy.
+                Photograph a leaf and get a disease diagnosis with a Grad-CAM visual explanation — on your phone,
+                even offline. Then get treatment advice and a voice assistant in 9 Indian languages, a 7-day
+                disease-risk forecast, and alerts when outbreaks are reported nearby.
               </motion.p>
 
               <motion.div
@@ -116,10 +118,10 @@ export default function Home() {
                 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .45 }}
               >
                 {[
-                  { val: '98.96%', label: 'Test Accuracy' },
+                  { val: '88.6%', label: 'Verified Accuracy*' },
                   { val: '38', label: 'Disease Classes' },
-                  { val: '< 1s', label: 'Inference Time' },
-                  { val: '54k+', label: 'Training Images' },
+                  { val: '9', label: 'Languages' },
+                  { val: 'Offline', label: 'On-device AI' },
                 ].map(s => (
                   <div key={s.label} className="hero-stat">
                     <span className="hero-stat-value">{s.val}</span>
@@ -176,7 +178,7 @@ export default function Home() {
 
           {/* Layer 1: Data Input */}
           <FadeUp style={{ marginBottom: 32 }}>
-            <div className="card" style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: 32, alignItems: 'center', borderLeft: '4px solid var(--forest-light)' }}>
+            <div className="card layer-card" style={{ borderLeft: '4px solid var(--forest-light)' }}>
               <div style={{ textAlign: 'center' }}>
                 <div style={{ width: 64, height: 64, background: 'rgba(5,150,105,.1)', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px', color: 'var(--forest-light)' }}>
                   <Database size={28} />
@@ -191,7 +193,7 @@ export default function Home() {
                   {[
                     { icon: <Upload size={16} />, label: 'Upload Photo', desc: 'Drag & drop JPG/PNG' },
                     { icon: <Camera size={16} />, label: 'Live Camera', desc: 'Webcam capture in-browser' },
-                    { icon: <ImageIcon size={16} />, label: 'Sample Gallery', desc: '6 preset disease samples' },
+                    { icon: <ImageIcon size={16} />, label: 'Sample Gallery', desc: '6 real held-out test images' },
                   ].map(m => (
                     <div key={m.label} style={{ flex: 1, minWidth: 140, background: 'var(--sand)', borderRadius: 12, padding: '14px 16px', border: '1px solid rgba(0,0,0,.07)' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'var(--forest)', marginBottom: 4, fontWeight: 700, fontSize: '.9rem' }}>
@@ -207,7 +209,7 @@ export default function Home() {
 
           {/* Layer 2: Preprocessing */}
           <FadeUp style={{ marginBottom: 32 }} delay={.06}>
-            <div className="card" style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: 32, alignItems: 'center', borderLeft: '4px solid var(--amber)' }}>
+            <div className="card layer-card" style={{ borderLeft: '4px solid var(--amber)' }}>
               <div style={{ textAlign: 'center' }}>
                 <div style={{ width: 64, height: 64, background: 'rgba(217,119,6,.1)', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px', color: 'var(--amber)' }}>
                   <Cpu size={28} />
@@ -216,10 +218,10 @@ export default function Home() {
                 <div style={{ fontSize: '.8rem', color: 'var(--text-muted)', fontWeight: 600, letterSpacing: '.06em', textTransform: 'uppercase' }}>Processing</div>
               </div>
               <div>
-                <h3 style={{ marginBottom: 8 }}>Standardized for the Model</h3>
-                <p style={{ marginBottom: 16, fontSize: '.95rem' }}>Every image goes through the same preprocessing pipeline before inference.</p>
+                <h3 style={{ marginBottom: 8 }}>Checked, Then Standardized</h3>
+                <p style={{ marginBottom: 16, fontSize: '.95rem' }}>Photos that are not a leaf, too dark or blurry are rejected with retake tips instead of a made-up diagnosis.</p>
                 <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
-                  {['Decode JPEG/PNG', '→', 'Resize to 224×224', '→', 'Normalize (ResNet50 mean)', '→', 'Expand batch dim'].map((step, i) => (
+                  {['Decode + EXIF rotate', '→', 'Leaf / blur / light check', '→', 'Resize to 224×224', '→', 'ResNet50 BGR mean'].map((step, i) => (
                     <span key={i} style={{
                       background: step === '→' ? 'transparent' : 'var(--sand)',
                       border: step === '→' ? 'none' : '1px solid rgba(0,0,0,.08)',
@@ -237,7 +239,7 @@ export default function Home() {
           {/* Layer 3: AI Model */}
           <FadeUp style={{ marginBottom: 32 }} delay={.1}>
             <div className="card" style={{ borderLeft: '4px solid #7c3aed' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: 32, alignItems: 'start' }}>
+              <div className="layer-card" style={{ alignItems: 'start' }}>
                 <div style={{ textAlign: 'center' }}>
                   <div style={{ width: 64, height: 64, background: 'rgba(124,58,237,.1)', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px', color: '#7c3aed' }}>
                     <Brain size={28} />
@@ -247,7 +249,7 @@ export default function Home() {
                 </div>
                 <div>
                   <h3 style={{ marginBottom: 8 }}>ResNet50 Architecture — Exactly What's Running</h3>
-                  <p style={{ marginBottom: 20, fontSize: '.95rem' }}>Transfer learning on ImageNet weights, fine-tuned with two-phase progressive unfreezing.</p>
+                  <p style={{ marginBottom: 20, fontSize: '.95rem' }}>Transfer learning on ImageNet weights (frozen backbone, trained classification head), then exported to an ONNX model that runs in the browser and on the server.</p>
                   {/* Architecture flow */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', overflowX: 'auto', paddingBottom: 4 }}>
                     {[
@@ -278,7 +280,7 @@ export default function Home() {
 
           {/* Layer 4: Prediction & Explainability */}
           <FadeUp delay={.14}>
-            <div className="card" style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: 32, alignItems: 'center', borderLeft: '4px solid #2563eb' }}>
+            <div className="card layer-card" style={{ borderLeft: '4px solid #2563eb' }}>
               <div style={{ textAlign: 'center' }}>
                 <div style={{ width: 64, height: 64, background: 'rgba(37,99,235,.1)', borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px', color: '#2563eb' }}>
                   <Eye size={28} />
@@ -288,11 +290,11 @@ export default function Home() {
               </div>
               <div>
                 <h3 style={{ marginBottom: 8 }}>Real Outputs — Every Time</h3>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+                <div className="outputs-grid">
                   {[
-                    { icon: <Target size={16} />, title: 'Disease Label', desc: '38-class prediction with PlantVillage taxonomy' },
-                    { icon: <BarChart2 size={16} />, title: 'Confidence Score', desc: 'Softmax probability as a % — updated live' },
-                    { icon: <Eye size={16} />, title: 'Grad-CAM Heatmap', desc: 'Gradient-weighted class activation map overlay' },
+                    { icon: <Target size={16} />, title: 'Disease + Top-3', desc: '38-class prediction; low-confidence results are flagged "not sure" with the top-3 matches' },
+                    { icon: <BarChart2 size={16} />, title: 'Severity Estimate', desc: 'Estimated % of leaf area affected — not just model confidence' },
+                    { icon: <Eye size={16} />, title: 'Grad-CAM Heatmap', desc: 'Exact Grad-CAM computed from the model head, on-device' },
                   ].map(o => (
                     <div key={o.title} style={{ background: 'var(--sand)', borderRadius: 12, padding: '14px 16px', border: '1px solid rgba(0,0,0,.07)' }}>
                       <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 6, color: '#2563eb', fontWeight: 700, fontSize: '.9rem' }}>{o.icon}{o.title}</div>
@@ -315,37 +317,55 @@ export default function Home() {
             <div className="section-label" style={{ display: 'inline-flex', marginBottom: 12 }}>
               <CheckCircle2 size={11} /> Built & Working
             </div>
-            <h2 className="section-title">Beyond Detection — Four Intelligent Advisory Modules</h2>
+            <h2 className="section-title">Beyond Detection — Built for Indian Farmers</h2>
             <p className="section-sub mx-auto text-center">
-              Every module below is implemented and returns real output in the Diagnose dashboard.
+              Every module below is implemented and returns real output in the app.
             </p>
           </FadeUp>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20 }}>
+          <div className="modules-grid">
             {[
               {
-                icon: <MessageCircle size={22} />, color: 'feat-icon-green',
-                badge: '✅ Live · Groq Llama 3',
-                title: 'AI Care Advice',
-                desc: 'After each prediction, Groq Llama 3 (llama3-8b-8192) generates a structured treatment plan broken into Immediate Action, Prevention, and Long-term Care sections.',
+                icon: <Wifi size={22} />, color: 'feat-icon-green',
+                badge: '✅ Live · ONNX Runtime Web',
+                title: 'Offline Crop Doctor (PWA)',
+                desc: 'Install the app once; diagnosis, Grad-CAM, treatment guides and scan history keep working with no internet in the field.',
+              },
+              {
+                icon: <Camera size={22} />, color: 'feat-icon-red',
+                badge: '✅ Live · OpenCV-style detection + ONNX',
+                title: 'Live Camera Scan',
+                desc: 'Point the camera at a leaf: it is detected, cropped and diagnosed continuously with a Good/Bad health meter — no photo needed. Healthy leaves show "100% healthy".',
+              },
+              {
+                icon: <MessageCircle size={22} />, color: 'feat-icon-amber',
+                badge: '✅ Live · Groq GPT-OSS 120B + Whisper',
+                title: 'Vernacular Advice & Voice Assistant',
+                desc: 'Structured treatment plans (organic and chemical, with doses) in 9 Indian languages, read aloud. Farmers can ask follow-up questions by voice.',
+              },
+              {
+                icon: <CloudRain size={22} />, color: 'feat-icon-blue',
+                badge: '✅ Live · Open-Meteo forecast',
+                title: '7-Day Disease Risk Forecast',
+                desc: 'Disease-specific rules (temperature, leaf-wetness hours, rain) score each day and suggest the best dry, calm day to spray.',
+              },
+              {
+                icon: <Globe size={22} />, color: 'feat-icon-red',
+                badge: '✅ Live · Community reports',
+                title: 'Outbreak Map & Nearby Alerts',
+                desc: 'Farmers can anonymously share a diagnosis (location rounded to ~5 km). The map shows hotspots and warns others within 25 km.',
               },
               {
                 icon: <Droplets size={22} />, color: 'feat-icon-blue',
-                badge: '✅ Live · Rule-based logic',
-                title: 'Smart Irrigation Advisory',
-                desc: 'Rule-based system that derives crop-specific watering recommendations from the detected disease and growth stage. Labels it accurately — no IoT sensors involved.',
+                badge: '✅ Live · Rules + live temperature',
+                title: 'Irrigation Advisory',
+                desc: 'Crop- and disease-aware watering guidance using live temperature. No IoT sensor involved; soil moisture is clearly marked as assumed.',
               },
               {
-                icon: <CloudRain size={22} />, color: 'feat-icon-amber',
-                badge: '✅ Live · Weather data integration',
-                title: 'Weather Risk Assessment',
-                desc: 'Uses current humidity, temperature, and rainfall forecast data to flag high-risk infection windows and advise on spraying schedules.',
-              },
-              {
-                icon: <Recycle size={22} />, color: 'feat-icon-red',
+                icon: <Recycle size={22} />, color: 'feat-icon-green',
                 badge: '✅ Live · Rule-based scoring',
                 title: 'Sustainability Score',
-                desc: 'Rule-based scoring system that assesses the environmental impact of the recommended treatment and highlights organic or low-chemical alternatives.',
+                desc: 'Grades the treatment path and highlights organic, biological and low-chemical alternatives.',
               },
             ].map((m, i) => (
               <FadeUp key={m.title} delay={i * .07}>
@@ -374,18 +394,19 @@ export default function Home() {
             <div className="section-label"><Award size={11} /> Model Transparency</div>
             <h2 className="section-title">Real Numbers. No Placeholders.</h2>
             <p style={{ color: 'rgba(255,255,255,.7)', maxWidth: 580, marginBottom: 48, fontSize: '1.05rem' }}>
-              These are the actual metrics from our trained model — evaluated on a fully held-out test set that the model never saw during training.
+              Metrics from our trained model on a fully held-out PlantVillage test split. *PlantVillage photos are taken in
+              controlled lab conditions; accuracy on real field photos is lower, which is why the app rejects poor photos and flags uncertain results.
             </p>
           </FadeUp>
 
           <div className="transparency-grid">
             {[
-              { val: '98.96%', label: 'Test Accuracy', desc: 'Held-out 15% stratified split — unseen during training.' },
-              { val: '98.85%', label: 'Validation Accuracy', desc: 'Measured every epoch during training on a 15% val split.' },
-              { val: '0.0324', label: 'Test Loss', desc: 'Categorical cross-entropy on the test set.' },
+              { val: '88.6%', label: 'Verified Accuracy', desc: 'Deployed ONNX model on 1,500 PlantVillage images (macro F1 0.82). Report in /model/reports.' },
+              { val: '100%', label: 'ONNX = Keras', desc: 'Browser/server model gives the same prediction as the Keras model on every checked image.' },
+              { val: 'Next', label: 'Phase-2 Fine-tuning', desc: 'Weak classes today: potato healthy, tomato mosaic virus, tomato early blight. Fine-tuning is the next step.' },
               { val: '38', label: 'Classes Detected', desc: '14 crop species, including Tomato, Potato, Apple, Grape, Corn.' },
               { val: '54,306', label: 'Training Images', desc: 'PlantVillage color dataset — stratified 70/15/15 split.' },
-              { val: '2-phase', label: 'Fine-Tuning Strategy', desc: 'Frozen backbone → unfreeze last 30 layers at lr=1e-5.' },
+              { val: 'Phase 1', label: 'Training Stage', desc: 'Frozen ResNet50 backbone + trained head. Phase-2 fine-tuning (last 30 layers) is the next accuracy step.' },
             ].map((item, i) => (
               <FadeUp key={item.label} delay={i * .06}>
                 <div className="transparency-card">
@@ -459,7 +480,7 @@ export default function Home() {
             </p>
           </FadeUp>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
+          <div className="roadmap-grid">
             {ROADMAP_ITEMS.map((item, i) => (
               <FadeUp key={item.title} delay={i * .07}>
                 {/* Visually distinct: dashed border, muted palette */}
@@ -536,7 +557,7 @@ export default function Home() {
             </div>
             <h2 style={{ color: 'white', marginBottom: 16 }}>See It in Action</h2>
             <p style={{ color: 'rgba(255,255,255,.75)', marginBottom: 32, maxWidth: 520, marginLeft: 'auto', marginRight: 'auto' }}>
-              Upload a real leaf photo or use a sample image — the full pipeline runs end-to-end in your browser.
+              Upload a real leaf photo or use a sample image — diagnosis and Grad-CAM run right in your browser.
             </p>
             <Link to="/diagnose" className="btn btn-amber btn-lg">
               Open Diagnosis Dashboard <ChevronRight size={18} />
@@ -552,7 +573,7 @@ export default function Home() {
               <div className="footer-brand">🌿 AgriSmart AI</div>
               <p className="footer-desc">
                 AI-powered plant disease diagnostic platform built for the Smart India Hackathon 2026.
-                ResNet50 · Grad-CAM · Groq Llama 3 · FastAPI · React.
+                ResNet50 · Grad-CAM · ONNX · Groq GPT-OSS 120B · FastAPI · React PWA.
               </p>
               <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 20 }}>
                 {['SIH 2026', 'Open Source', 'Explainable AI', 'Agriculture'].map(b => (
@@ -572,8 +593,8 @@ export default function Home() {
               <h5>Resources</h5>
               <ul>
                 <li><a href="https://github.com/Anshum25/agrismart-ai" target="_blank" rel="noreferrer">GitHub Repo</a></li>
-                <li><a href="#">Demo Video</a></li>
-                <li><a href="http://localhost:8000/docs" target="_blank" rel="noreferrer">API Docs</a></li>
+                <li><Link to="/outbreaks">Outbreak Map</Link></li>
+                {API_DOCS_URL && <li><a href={API_DOCS_URL} target="_blank" rel="noreferrer">API Docs</a></li>}
               </ul>
             </div>
           </div>
