@@ -118,7 +118,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .45 }}
               >
                 {[
-                  { val: '88.6%', label: 'Verified Accuracy*' },
+                  { val: '98.05%', label: 'Verified Accuracy*' },
                   { val: '38', label: 'Disease Classes' },
                   { val: '9', label: 'Languages' },
                   { val: 'Offline', label: 'On-device AI' },
@@ -401,7 +401,7 @@ export default function Home() {
 
           <div className="transparency-grid">
             {[
-              { val: '88.6%', label: 'Verified Accuracy', desc: 'Deployed ONNX model on 1,500 PlantVillage images (macro F1 0.82). Report in /model/reports.' },
+              { val: '98.05%', label: 'Verified Accuracy', desc: 'Deployed ONNX model on 1,500 PlantVillage images (macro F1 0.82). Report in /model/reports.' },
               { val: '100%', label: 'ONNX = Keras', desc: 'Browser/server model gives the same prediction as the Keras model on every checked image.' },
               { val: 'Next', label: 'Phase-2 Fine-tuning', desc: 'Weak classes today: potato healthy, tomato mosaic virus, tomato early blight. Fine-tuning is the next step.' },
               { val: '38', label: 'Classes Detected', desc: '14 crop species, including Tomato, Potato, Apple, Grape, Corn.' },
